@@ -1,0 +1,14 @@
+name: AuctionHouse
+main: net.starly.auctionhouse.AuctionHouse
+author: Starly Team
+website: http://starly.kr/
+
+description: AuctionHouse Plugin.
+
+softdepend: [ ST-Point ]
+
+version: 1.0
+api-version: 1.19
+
+commands:
+  거래소:
