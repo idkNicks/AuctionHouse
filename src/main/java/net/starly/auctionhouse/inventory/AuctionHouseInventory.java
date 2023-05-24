@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import net.starly.auctionhouse.page.AuctionHouseInventoryHolder;
 import net.starly.auctionhouse.page.PaginationManager;
 import net.starly.auctionhouse.manager.AuctionHouseListenerManager;
+import net.starly.auctionhouse.page.WarehouseHolder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -39,9 +40,11 @@ public class AuctionHouseInventory {
             player.playSound(player.getLocation(), Sound.valueOf("ITEM_BOOK_PAGE_TURN"), 2, 1);
         }
 
+        WarehouseHolder warehouseHolder = new WarehouseHolder(player.getUniqueId(), paginationManager, 50, 48);
+
         if (event.getSlot() == paginationHolder.warehouseButtonSlot()) {
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 2, 1);
-            // TODO 아이템 보관소 열기
+            player.openInventory(warehouseHolder.getInventory());
         }
     }
 }

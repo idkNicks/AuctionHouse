@@ -31,7 +31,6 @@ public class AuctionHouseExecutor implements TabExecutor {
 
         if (args.length == 0) {
             AuctionHouseListenerManager.openAuctionHouse(player);
-            System.out.println(PlayerItemStorage.loadExpiredItem(player.getUniqueId()));
             return true;
         }
 
