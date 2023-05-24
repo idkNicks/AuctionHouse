@@ -8,7 +8,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public record PaginationInventoryHolder(PaginationManager paginationManager, int nextButtonSlot, int prevButtonSlot) implements InventoryHolder {
+public record AuctionHouseInventoryHolder(PaginationManager paginationManager, int nextButtonSlot, int prevButtonSlot, int warehouseButtonSlot) implements InventoryHolder {
 
     @Override
     public @NotNull Inventory getInventory() {
@@ -27,8 +27,13 @@ public record PaginationInventoryHolder(PaginationManager paginationManager, int
                 .setName("이전 페이지")
                 .build();
 
+        ItemStack warehouseItem = new ItemBuilder(Material.CHEST)
+                .setName("만료된 아이템")
+                .build();
+
         inventory.setItem(nextButtonSlot, nextPageItem);
         inventory.setItem(prevButtonSlot, prevPageItem);
+        inventory.setItem(warehouseButtonSlot, warehouseItem);
 
         return inventory;
     }

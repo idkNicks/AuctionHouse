@@ -57,6 +57,7 @@ public class AuctionItemStorage {
         } catch (IOException e) { e.printStackTrace(); }
     }
 
+
     public static List<AuctionItem> loadItems() {
         List<AuctionItem> items = new ArrayList<>();
 

@@ -6,13 +6,6 @@ import net.starly.auctionhouse.entity.AuctionItem;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * PaginationManager 클래스는 아이템 목록의 페이징 처리를 담당합니다.
- * 각 페이지는 45개의 아이템을 보여주며, 이는 AuctionHousePage 객체를 통해 관리됩니다.
- *
- * @since 2023-05-23
- * @author idkNicks
- */
 @Getter
 public class PaginationManager {
 

@@ -2,7 +2,8 @@ package net.starly.auctionhouse.command;
 
 import net.starly.auctionhouse.AuctionHouse;
 import net.starly.auctionhouse.manager.AuctionHouseListenerManager;
-import net.starly.auctionhouse.storage.AuctionHouseItemStorage;
+import net.starly.auctionhouse.storage.AuctionItemStorage;
+import net.starly.auctionhouse.storage.PlayerItemStorage;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -30,18 +31,19 @@ public class AuctionHouseExecutor implements TabExecutor {
 
         if (args.length == 0) {
             AuctionHouseListenerManager.openAuctionHouse(player);
+            System.out.println(PlayerItemStorage.loadExpiredItem(player.getUniqueId()));
             return true;
         }
 
         switch (args[0]) {
 
             case "판매", "sell" -> {
-                final Long price;
+                final long price;
 
                 try {
                     price = Long.parseLong(args[1]);
                 } catch (NumberFormatException exception) {
-                    player.sendMessage("숫자만 입력해야 합니다."); // 숫자만 입력하라는 메시지 전송
+                    player.sendMessage("숫자만 입력해야 합니다.");
                     return true;
                 }
 
@@ -49,13 +51,15 @@ public class AuctionHouseExecutor implements TabExecutor {
 
                 ItemStack itemStack = player.getInventory().getItemInMainHand();
                 if (itemStack.getType() == Material.AIR) {
-                    player.sendMessage("물건을 들고 있어야 합니다."); // 물건을 들고 있어야 한다는 메시지 전송
+                    player.sendMessage("물건을 들고 있어야 합니다.");
                     return true;
                 }
 
-                LocalDateTime expirationTime = LocalDateTime.now().plus(7, ChronoUnit.HOURS);
+//                LocalDateTime expirationTime = LocalDateTime.now().plus(7, ChronoUnit.HOURS);
+                LocalDateTime expirationTime = LocalDateTime.now().plus(5, ChronoUnit.SECONDS);
 
-                AuctionHouseItemStorage.storeItem(player.getUniqueId(), price, expirationTime, player.getInventory().getItemInMainHand().clone(), amount);
+
+                AuctionItemStorage.storeItem(player.getUniqueId(), price, expirationTime, player.getInventory().getItemInMainHand().clone(), amount);
                 itemStack.setAmount(itemStack.getAmount() - amount);
                 player.sendMessage("경매 아이템이 등록되었습니다.");
                 return true;

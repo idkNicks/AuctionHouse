@@ -2,6 +2,9 @@ package net.starly.auctionhouse;
 
 import lombok.Getter;
 import net.starly.auctionhouse.command.AuctionHouseExecutor;
+import net.starly.auctionhouse.listener.AuctionItemExpiryListener;
+import net.starly.auctionhouse.scheduler.AuctionItemExpiryScheduler;
+import net.starly.auctionhouse.storage.AuctionItemStorage;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -25,6 +28,9 @@ public class AuctionHouse extends JavaPlugin {
 
         saveDefaultConfig();
 
+        AuctionItemStorage auctionItemStorage = new AuctionItemStorage();
+        new AuctionItemExpiryScheduler(auctionItemStorage).runTaskTimer(this, 0L, 20L);
+
         AuctionHouseExecutor auctionHouseExecutor = new AuctionHouseExecutor();
         PluginCommand auctionHouse = getServer().getPluginCommand("거래소");
 
@@ -34,6 +40,7 @@ public class AuctionHouse extends JavaPlugin {
         }
 
         registerListeners(
+                new AuctionItemExpiryListener()
         );
     }
 

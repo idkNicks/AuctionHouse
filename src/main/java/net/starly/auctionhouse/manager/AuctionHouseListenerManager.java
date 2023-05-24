@@ -3,9 +3,9 @@ package net.starly.auctionhouse.manager;
 import net.starly.auctionhouse.AuctionHouse;
 import net.starly.auctionhouse.inventory.AuctionHouseInventory;
 import net.starly.auctionhouse.entity.AuctionItem;
-import net.starly.auctionhouse.page.PaginationInventoryHolder;
+import net.starly.auctionhouse.page.AuctionHouseInventoryHolder;
 import net.starly.auctionhouse.page.PaginationManager;
-import net.starly.auctionhouse.storage.AuctionHouseItemStorage;
+import net.starly.auctionhouse.storage.AuctionItemStorage;
 import net.starly.auctionhouse.builder.ItemBuilder;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -30,7 +30,7 @@ public class AuctionHouseListenerManager {
     private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시mm분ss초");
 
     public static void openAuctionHouse(Player player) {
-        List<AuctionItem> items = AuctionHouseItemStorage.loadItems();
+        List<AuctionItem> items = AuctionItemStorage.loadItems();
         for (AuctionItem item : items) {
             UUID sellerUuid = item.sellerId();
             long price = item.price();
@@ -45,13 +45,13 @@ public class AuctionHouseListenerManager {
                     )).build();
 
             PaginationManager paginationManager = new PaginationManager(items);
-            PaginationInventoryHolder paginationInventoryHolder = new PaginationInventoryHolder(paginationManager, 50, 48);
+            AuctionHouseInventoryHolder paginationInventoryHolder = new AuctionHouseInventoryHolder(paginationManager, 50, 48, 45);
 
             openInventoryAndRegisterEvent(player, paginationInventoryHolder.getInventory());
         }
     }
 
-    public static void pageInventory(Player player, PaginationInventoryHolder paginationHolder) {
+    public static void pageInventory(Player player, AuctionHouseInventoryHolder paginationHolder) {
         openInventoryAndRegisterEvent(player, paginationHolder.getInventory());
     }
 
