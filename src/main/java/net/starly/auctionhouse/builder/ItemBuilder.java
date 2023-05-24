@@ -1,9 +1,6 @@
 package net.starly.auctionhouse.builder;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -14,12 +11,13 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * ItemBuilder 클래스는 아이템스택을 만드는데 사용하는 빌더 클래스입니다.
  *
- * @since 2023-05-24
  * @author idkNicks
+ * @since 2023-05-24
  */
 public class ItemBuilder {
 
@@ -49,7 +47,7 @@ public class ItemBuilder {
      * Material과 수량을 이용해 ItemBuilder를 생성합니다.
      *
      * @param material 아이템의 종류
-     * @param amount 아이템의 수량
+     * @param amount   아이템의 수량
      */
     public ItemBuilder(Material material, int amount) {
         item = new ItemStack(material, amount);
@@ -63,7 +61,7 @@ public class ItemBuilder {
      * @return this
      */
     public ItemBuilder setName(String name) {
-        meta.setDisplayName(name);
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
         return this;
     }
 
@@ -74,7 +72,10 @@ public class ItemBuilder {
      * @return this
      */
     public ItemBuilder setLore(String... lore) {
-        meta.setLore(Arrays.asList(lore));
+        List<String> coloredLore = Arrays.stream(lore)
+                .map(line -> ChatColor.translateAlternateColorCodes('&', line))
+                .collect(Collectors.toList());
+        meta.setLore(coloredLore);
         return this;
     }
 
@@ -85,7 +86,10 @@ public class ItemBuilder {
      * @return this
      */
     public ItemBuilder setLore(List<String> lore) {
-        meta.setLore(lore);
+        List<String> coloredLore = lore.stream()
+                .map(line -> ChatColor.translateAlternateColorCodes('&', line))
+                .collect(Collectors.toList());
+        meta.setLore(coloredLore);
         return this;
     }
 
@@ -104,7 +108,7 @@ public class ItemBuilder {
      * 아이템에 마법 부여를 추가합니다.
      *
      * @param enchantment 마법 부여 유형
-     * @param level 마법 부여 레벨
+     * @param level       마법 부여 레벨
      * @return this
      */
     public ItemBuilder addEnchantment(Enchantment enchantment, int level) {
