@@ -17,7 +17,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
-public class AuctionHouseItemStorage {
+public class AuctionItemStorage {
 
     private static final File FILE = new File(AuctionHouse.getInstance().getDataFolder(), "auctionhouse.db");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시mm분ss초");
@@ -34,13 +34,28 @@ public class AuctionHouseItemStorage {
             } catch (IOException e) { e.printStackTrace(); }
         }
 
-        // 줄을 파일에 추가합니다.
         try (BufferedWriter writer = Files.newBufferedWriter(FILE.toPath(), StandardCharsets.UTF_8, StandardOpenOption.APPEND)) {
             writer.write(line);
             writer.newLine();
         } catch (IOException e) { e.printStackTrace(); }
     }
 
+    public static void removeItem(AuctionItem targetItem) {
+        List<AuctionItem> items = loadItems();
+        items.removeIf(item -> item.sellerId().equals(targetItem.sellerId())
+                && item.price() == targetItem.price()
+                && item.expiryTime().isEqual(targetItem.expiryTime())
+                && item.itemStack().equals(targetItem.itemStack()));
+
+        try (BufferedWriter writer = Files.newBufferedWriter(FILE.toPath(), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING)) {
+            for (AuctionItem item : items) {
+                String serializedItemStack = serializeItemStack(item.itemStack());
+                String line = item.sellerId() + "," + item.price() + "," + item.expiryTime().format(DATE_FORMATTER) + "," + serializedItemStack;
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) { e.printStackTrace(); }
+    }
 
     public static List<AuctionItem> loadItems() {
         List<AuctionItem> items = new ArrayList<>();
