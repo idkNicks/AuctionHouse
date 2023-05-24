@@ -1,6 +1,6 @@
 package net.starly.auctionhouse.scheduler;
 
-import net.starly.auctionhouse.entity.AuctionItem;
+import net.starly.auctionhouse.entity.impl.AuctionItem;
 import net.starly.auctionhouse.storage.AuctionItemStorage;
 import net.starly.auctionhouse.storage.PlayerItemStorage;
 import org.bukkit.scheduler.BukkitRunnable;

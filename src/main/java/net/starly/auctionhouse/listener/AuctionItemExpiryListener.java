@@ -1,7 +1,7 @@
 package net.starly.auctionhouse.listener;
 
 import net.starly.auctionhouse.AuctionHouse;
-import net.starly.auctionhouse.entity.AuctionItem;
+import net.starly.auctionhouse.entity.impl.AuctionItem;
 import net.starly.auctionhouse.event.AuctionItemExpiryEvent;
 import net.starly.auctionhouse.storage.AuctionItemStorage;
 import net.starly.auctionhouse.storage.PlayerItemStorage;

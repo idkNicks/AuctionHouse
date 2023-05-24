@@ -1,12 +1,12 @@
 package net.starly.auctionhouse.manager;
 
 import net.starly.auctionhouse.AuctionHouse;
-import net.starly.auctionhouse.entity.impl.AuctionItem;
-import net.starly.auctionhouse.inventory.AuctionHouseInventory;
+import net.starly.auctionhouse.entity.impl.WarehouseItem;
+import net.starly.auctionhouse.inventory.WarehouseInventory;
 import net.starly.auctionhouse.page.AuctionHousePageHolder;
 import net.starly.auctionhouse.page.PaginationManager;
-import net.starly.auctionhouse.storage.AuctionItemStorage;
-import net.starly.auctionhouse.builder.ItemBuilder;
+import net.starly.auctionhouse.page.WarehousePageHolder;
+import net.starly.auctionhouse.storage.PlayerItemStorage;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
@@ -14,41 +14,24 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
-import java.text.DecimalFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class AuctionHouseListenerManager {
+public class WarehouseListenerManager {
 
     private static final Map<UUID, Listener> listenerMap = new HashMap<>();
-    private static DecimalFormat priceFormat = new DecimalFormat("#,##0");
-    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시mm분ss초");
 
-    public static void openAuctionHouse(Player player) {
-        List<AuctionItem> items = AuctionItemStorage.loadItems();
-        for (AuctionItem item : items) {
-            UUID sellerUuid = item.sellerId();
-            long price = item.price();
-            LocalDateTime expirationTime = item.expiryTime();
+    public static void openWarehouse(Player player) {
+        List<ItemStack> items = PlayerItemStorage.loadExpiredItem(player.getUniqueId());
 
-            new ItemBuilder(item.itemStack())
-                    .setLore(List.of(
-                            " §6§l판매자 | §f " + AuctionHouse.getInstance().getServer().getPlayer(sellerUuid).getDisplayName(),
-                            " §6§l가격 | §f " + priceFormat.format(price),
-                            " §6§l만료 시간 | §f" + dateFormatter.format(expirationTime),
-                            " §6§l아이템스택 | §f " + item.itemStack().getType()
-                    )).build();
+        PaginationManager<WarehouseItem> warehousePaginationManager = new PaginationManager(items);
+        WarehousePageHolder warehouseHolder = new WarehousePageHolder(player.getUniqueId(), warehousePaginationManager, 50, 48);
 
-            PaginationManager paginationManager = new PaginationManager(items);
-            AuctionHousePageHolder paginationInventoryHolder = new AuctionHousePageHolder(paginationManager, paginationManager, 50, 48, 45);
-
-            openInventoryAndRegisterEvent(player, paginationInventoryHolder.getInventory());
-        }
+        openInventoryAndRegisterEvent(player, warehouseHolder.getInventory());
     }
 
     public static void pageInventory(Player player, AuctionHousePageHolder paginationHolder) {
@@ -64,14 +47,14 @@ public class AuctionHouseListenerManager {
 
     private static Listener registerInventoryClickEvent(UUID uuid, Inventory inventory) {
         Server server = AuctionHouse.getInstance().getServer();
-        AuctionHouseInventory auctionHouseInventory = new AuctionHouseInventory(inventory);
+        WarehouseInventory warehouseInventory = new WarehouseInventory(inventory);
         Listener listener = new Listener() {};
 
         server.getPluginManager().registerEvent(InventoryClickEvent.class, listener, EventPriority.LOWEST, (listeners, event) -> {
             if (event instanceof InventoryClickEvent) {
                 InventoryClickEvent clickEvent = (InventoryClickEvent) event;
                 if (uuid.equals(clickEvent.getWhoClicked().getUniqueId()))
-                    auctionHouseInventory.onClick(clickEvent);
+                    warehouseInventory.onClick(clickEvent);
             }
         }, AuctionHouse.getInstance());
 
@@ -80,7 +63,8 @@ public class AuctionHouseListenerManager {
 
     private static void registerInventoryCloseEvent(UUID uuid) {
         Server server = AuctionHouse.getInstance().getServer();
-        Listener closeEventListener = new Listener() {};
+        Listener closeEventListener = new Listener() {
+        };
 
         server.getPluginManager().registerEvent(InventoryCloseEvent.class, closeEventListener, EventPriority.LOWEST, (listeners, event) -> {
             if (event instanceof InventoryCloseEvent) {

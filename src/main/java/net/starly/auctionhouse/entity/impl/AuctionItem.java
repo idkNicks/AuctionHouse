@@ -1,5 +1,6 @@
-package net.starly.auctionhouse.entity;
+package net.starly.auctionhouse.entity.impl;
 
+import net.starly.auctionhouse.entity.AuctionItemOrStack;
 import org.bukkit.inventory.ItemStack;
 
 import java.time.LocalDateTime;

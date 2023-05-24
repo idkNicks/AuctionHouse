@@ -1,7 +1,7 @@
 package net.starly.auctionhouse.storage;
 
 import net.starly.auctionhouse.AuctionHouse;
-import net.starly.auctionhouse.entity.AuctionItem;
+import net.starly.auctionhouse.entity.impl.AuctionItem;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;

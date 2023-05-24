@@ -1,3 +1,4 @@
+
 package net.starly.auctionhouse.page;
 
 import net.starly.auctionhouse.entity.AuctionItemOrStack;
