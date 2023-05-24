@@ -21,12 +21,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-/**
- * AuctionHouseExecutor 클래스는 경매 플러그인의 명령어를 처리합니다.
- *
- * @since 2023-05-22
- * @author idkNicks
- */
 public class AuctionHouseExecutor implements TabExecutor {
 
     @Override

@@ -21,11 +21,6 @@ public class AuctionHouseInventory {
 
     private final Inventory inventory;
 
-    /**
-     * 인벤토리에서 클릭 이벤트가 발생했을 때 호출되는 메소드입니다.
-     *
-     * @param event 인벤토리 클릭 이벤트
-     */
     public void onClick(InventoryClickEvent event) {
         final Player player = (Player) event.getWhoClicked();
 
