@@ -9,6 +9,7 @@ import org.bukkit.util.io.BukkitObjectOutputStream;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -19,13 +20,18 @@ import java.util.UUID;
 public class AuctionHouseItemStorage {
 
     private static final File FILE = new File(AuctionHouse.getInstance().getDataFolder(), "auctionhouse.db");
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시mm분ss초");
 
     public static void storeItem(UUID sellerUuid, long price, LocalDateTime expirationTime, ItemStack itemStack) {
         String serializedItemStack = serializeItemStack(itemStack);
         String line = sellerUuid + "," + price + "," + expirationTime.format(DATE_FORMATTER) + "," + serializedItemStack;
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE, true))) {
+        if (!FILE.exists()) {
+            try {
+                FILE.createNewFile();
+            } catch (IOException e) { e.printStackTrace(); }
+        }
+        try (BufferedWriter writer = Files.newBufferedWriter(FILE.toPath(), StandardCharsets.UTF_8, StandardOpenOption.APPEND)) {
             writer.write(line);
             writer.newLine();
         } catch (IOException e) { e.printStackTrace(); }

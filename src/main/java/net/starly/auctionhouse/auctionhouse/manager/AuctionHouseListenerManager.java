@@ -14,8 +14,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +27,8 @@ import java.util.UUID;
 public class AuctionHouseListenerManager {
 
     private static final Map<UUID, Listener> listenerMap = new HashMap<>();
+    private static DecimalFormat priceFormat = new DecimalFormat("#,##0");
+    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시mm분ss초");
 
     public static void openAuctionHouse(Player player) {
         List<AuctionItem> items = AuctionHouseItemStorage.loadItems();
@@ -33,10 +38,14 @@ public class AuctionHouseListenerManager {
             long price = item.price();
             LocalDateTime expirationTime = item.expiryTime();
 
-            System.out.println("판매자 UUID: " + sellerUuid);
-            System.out.println("가격: " + price);
-            System.out.println("만료 시간: " + expirationTime);
-            System.out.println("아이템 스택: " + itemStack);
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            itemMeta.setLore(List.of(
+                    " §6§l판매자 | §f " + AuctionHouse.getInstance().getServer().getPlayer(sellerUuid).getDisplayName(),
+                    " §6§l가격 | §f " + priceFormat.format(price),
+                    " §6§l만료 시간 | §f" + dateFormatter.format(expirationTime),
+                    " §6§l아이템스택 | §f " + itemStack.getType()
+                    ));
+            itemStack.setItemMeta(itemMeta);
 
             PaginationManager paginationManager = new PaginationManager(items);
             PaginationInventoryHolder paginationInventoryHolder = new PaginationInventoryHolder(paginationManager, 50, 48);

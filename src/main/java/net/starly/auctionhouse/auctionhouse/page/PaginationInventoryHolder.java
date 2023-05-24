@@ -12,7 +12,7 @@ public record PaginationInventoryHolder(PaginationManager paginationManager, int
 
     @Override
     public @NotNull Inventory getInventory() {
-        Inventory inventory = AuctionHouse.getInstance().getServer().createInventory(this, 54, "페이지: " + paginationManager.getCurrentPage());
+        Inventory inventory = AuctionHouse.getInstance().getServer().createInventory(this, 54, "유저거래소 [" + paginationManager.getCurrentPage() + "]");
         AuctionHousePage currentPage = paginationManager.getCurrentPageData();
 
         for (int i = 0; i < currentPage.itemStacks().size(); i++) {

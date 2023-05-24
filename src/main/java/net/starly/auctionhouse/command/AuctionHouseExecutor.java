@@ -27,14 +27,9 @@ public class AuctionHouseExecutor implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
-        // COMMAND INFO
-
-        // 거래소 - 거래소 GUI를 엽니다
-        // 거래소 판매 (가격) (갯수) - 손에 든 아이템을 가격에 갯수만큼 등록합니다
         Player player = (Player) sender;
 
         if (args.length == 0) {
-            // TODO 유저 거래소 GUI 오픈
             AuctionHouseListenerManager.openAuctionHouse(player);
             return true;
         }
