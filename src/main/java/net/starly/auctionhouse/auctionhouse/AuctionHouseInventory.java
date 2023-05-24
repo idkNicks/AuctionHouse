@@ -26,12 +26,14 @@ public class AuctionHouseInventory {
         PaginationManager paginationManager = paginationHolder.paginationManager();
 
         if (event.getSlot() == paginationHolder.prevButtonSlot()) {
+            if (!paginationManager.hasPrevPage()) return;
             paginationManager.prevPage();
             AuctionHouseListenerManager.pageInventory(player, paginationHolder);
             player.playSound(player.getLocation(), Sound.valueOf("ITEM_BOOK_PAGE_TURN"), 2, 1);
         }
 
         if (event.getSlot() == paginationHolder.nextButtonSlot()) {
+            if (!paginationManager.hasNextPage()) return;
             paginationManager.nextPage();
             AuctionHouseListenerManager.pageInventory(player, paginationHolder);
             player.playSound(player.getLocation(), Sound.valueOf("ITEM_BOOK_PAGE_TURN"), 2, 1);

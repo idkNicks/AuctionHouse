@@ -17,17 +17,15 @@ public class PaginationManager {
         this.currentPage = 1;
     }
 
-    public void nextPage() {
-        if (currentPage < pages.size()) currentPage++;
-    }
+    public void nextPage() { if (hasNextPage()) currentPage++; }
 
-    public void prevPage() {
-        if (currentPage > 1) currentPage--;
-    }
+    public void prevPage() { if (hasPrevPage()) currentPage--; }
 
-    public AuctionHousePage getCurrentPageData() {
-        return pages.get(currentPage - 1);
-    }
+    public boolean hasNextPage() { return currentPage < pages.size(); }
+
+    public boolean hasPrevPage() { return currentPage > 1; }
+
+    public AuctionHousePage getCurrentPageData() { return pages.get(currentPage - 1); }
 
     public List<AuctionHousePage> paginateItems(List<AuctionItem> itemStacks) {
         final List<AuctionHousePage> pages = new ArrayList<>();
