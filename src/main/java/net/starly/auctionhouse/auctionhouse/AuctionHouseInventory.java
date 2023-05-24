@@ -10,11 +10,22 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
+/**
+ * AuctionHouseInventory 클래스는 경매하우스 인벤토리의 클릭 이벤트를 처리합니다.
+ *
+ * @since 2023-05-24
+ * @author idkNicks
+ */
 @AllArgsConstructor
 public class AuctionHouseInventory {
 
     private final Inventory inventory;
 
+    /**
+     * 인벤토리에서 클릭 이벤트가 발생했을 때 호출되는 메소드입니다.
+     *
+     * @param event 인벤토리 클릭 이벤트
+     */
     public void onClick(InventoryClickEvent event) {
         final Player player = (Player) event.getWhoClicked();
 

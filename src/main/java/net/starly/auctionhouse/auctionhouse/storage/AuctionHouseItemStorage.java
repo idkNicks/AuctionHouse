@@ -35,8 +35,12 @@ public class AuctionHouseItemStorage {
      * @param price 가격
      * @param expirationTime 만료 시간
      * @param itemStack 아이템 스택
+     * @param amount 아이템 갯수
      */
-    public static void storeItem(UUID sellerUuid, long price, LocalDateTime expirationTime, ItemStack itemStack) {
+    public static void storeItem(UUID sellerUuid, long price, LocalDateTime expirationTime, ItemStack itemStack, int amount) {
+        // 아이템의 양을 설정합니다.
+        itemStack.setAmount(amount);
+
         // 아이템 스택을 직렬화하고, 각 항목을 CSV 형태의 문자열로 만듭니다.
         String serializedItemStack = serializeItemStack(itemStack);
         String line = sellerUuid + "," + price + "," + expirationTime.format(DATE_FORMATTER) + "," + serializedItemStack;
@@ -54,6 +58,7 @@ public class AuctionHouseItemStorage {
             writer.newLine();
         } catch (IOException e) { e.printStackTrace(); }
     }
+
 
     /**
      * 파일에서 모든 경매 아이템을 로드합니다.

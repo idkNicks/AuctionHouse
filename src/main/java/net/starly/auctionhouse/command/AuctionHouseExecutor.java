@@ -1,7 +1,6 @@
 package net.starly.auctionhouse.command;
 
 import net.starly.auctionhouse.AuctionHouse;
-import net.starly.auctionhouse.auctionhouse.entity.AuctionItem;
 import net.starly.auctionhouse.auctionhouse.manager.AuctionHouseListenerManager;
 import net.starly.auctionhouse.auctionhouse.storage.AuctionHouseItemStorage;
 import org.bukkit.Material;
@@ -22,6 +21,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * AuctionHouseExecutor 클래스는 경매 플러그인의 명령어를 처리합니다.
+ *
+ * @since 2023-05-22
+ * @author idkNicks
+ */
 public class AuctionHouseExecutor implements TabExecutor {
 
     @Override
@@ -46,6 +51,8 @@ public class AuctionHouseExecutor implements TabExecutor {
                     return true;
                 }
 
+                final int amount = Integer.parseInt(args[2]);
+
                 ItemStack itemStack = player.getInventory().getItemInMainHand();
                 if (itemStack.getType() == Material.AIR) {
                     player.sendMessage("물건을 들고 있어야 합니다."); // 물건을 들고 있어야 한다는 메시지 전송
@@ -54,7 +61,8 @@ public class AuctionHouseExecutor implements TabExecutor {
 
                 LocalDateTime expirationTime = LocalDateTime.now().plus(7, ChronoUnit.HOURS);
 
-                AuctionHouseItemStorage.storeItem(player.getUniqueId(), price, expirationTime, player.getInventory().getItemInMainHand().clone());
+                AuctionHouseItemStorage.storeItem(player.getUniqueId(), price, expirationTime, player.getInventory().getItemInMainHand().clone(), amount);
+                itemStack.setAmount(itemStack.getAmount() - amount);
                 player.sendMessage("경매 아이템이 등록되었습니다.");
                 return true;
             }
