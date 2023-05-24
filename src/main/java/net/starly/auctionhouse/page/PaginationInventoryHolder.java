@@ -1,4 +1,4 @@
-package net.starly.auctionhouse.auctionhouse.page;
+package net.starly.auctionhouse.page;
 
 import net.starly.auctionhouse.AuctionHouse;
 import net.starly.auctionhouse.builder.ItemBuilder;

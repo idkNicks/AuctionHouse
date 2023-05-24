@@ -1,8 +1,8 @@
 package net.starly.auctionhouse.command;
 
 import net.starly.auctionhouse.AuctionHouse;
-import net.starly.auctionhouse.auctionhouse.manager.AuctionHouseListenerManager;
-import net.starly.auctionhouse.auctionhouse.storage.AuctionHouseItemStorage;
+import net.starly.auctionhouse.manager.AuctionHouseListenerManager;
+import net.starly.auctionhouse.storage.AuctionHouseItemStorage;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

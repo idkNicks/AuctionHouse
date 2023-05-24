@@ -1,4 +1,4 @@
-package net.starly.auctionhouse.auctionhouse.entity;
+package net.starly.auctionhouse.entity;
 
 import org.bukkit.inventory.ItemStack;
 

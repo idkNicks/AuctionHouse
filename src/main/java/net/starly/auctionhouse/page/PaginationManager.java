@@ -1,7 +1,7 @@
-package net.starly.auctionhouse.auctionhouse.page;
+package net.starly.auctionhouse.page;
 
 import lombok.Getter;
-import net.starly.auctionhouse.auctionhouse.entity.AuctionItem;
+import net.starly.auctionhouse.entity.AuctionItem;
 
 import java.util.ArrayList;
 import java.util.List;

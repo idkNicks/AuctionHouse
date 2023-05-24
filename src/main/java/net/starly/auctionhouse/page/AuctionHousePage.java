@@ -1,6 +1,6 @@
-package net.starly.auctionhouse.auctionhouse.page;
+package net.starly.auctionhouse.page;
 
-import net.starly.auctionhouse.auctionhouse.entity.AuctionItem;
+import net.starly.auctionhouse.entity.AuctionItem;
 
 import java.util.List;
 

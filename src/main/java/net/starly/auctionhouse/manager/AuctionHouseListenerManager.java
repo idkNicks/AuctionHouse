@@ -1,11 +1,11 @@
-package net.starly.auctionhouse.auctionhouse.manager;
+package net.starly.auctionhouse.manager;
 
 import net.starly.auctionhouse.AuctionHouse;
-import net.starly.auctionhouse.auctionhouse.AuctionHouseInventory;
-import net.starly.auctionhouse.auctionhouse.entity.AuctionItem;
-import net.starly.auctionhouse.auctionhouse.page.PaginationInventoryHolder;
-import net.starly.auctionhouse.auctionhouse.page.PaginationManager;
-import net.starly.auctionhouse.auctionhouse.storage.AuctionHouseItemStorage;
+import net.starly.auctionhouse.inventory.AuctionHouseInventory;
+import net.starly.auctionhouse.entity.AuctionItem;
+import net.starly.auctionhouse.page.PaginationInventoryHolder;
+import net.starly.auctionhouse.page.PaginationManager;
+import net.starly.auctionhouse.storage.AuctionHouseItemStorage;
 import net.starly.auctionhouse.builder.ItemBuilder;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;

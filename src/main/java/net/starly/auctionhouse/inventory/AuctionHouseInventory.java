@@ -1,9 +1,9 @@
-package net.starly.auctionhouse.auctionhouse;
+package net.starly.auctionhouse.inventory;
 
 import lombok.AllArgsConstructor;
-import net.starly.auctionhouse.auctionhouse.page.PaginationInventoryHolder;
-import net.starly.auctionhouse.auctionhouse.page.PaginationManager;
-import net.starly.auctionhouse.auctionhouse.manager.AuctionHouseListenerManager;
+import net.starly.auctionhouse.page.PaginationInventoryHolder;
+import net.starly.auctionhouse.page.PaginationManager;
+import net.starly.auctionhouse.manager.AuctionHouseListenerManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
