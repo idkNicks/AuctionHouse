@@ -59,8 +59,12 @@ public class ItemBuilder {
      *
      * @param name 아이템의 이름
      * @return this
+     * @throws IllegalArgumentException 만약 이름(name)이 null일 경우
      */
     public ItemBuilder setName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("이름(name)은 null이 될 수 없습니다.");
+        }
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
         return this;
     }
@@ -110,8 +114,15 @@ public class ItemBuilder {
      * @param enchantment 마법 부여 유형
      * @param level       마법 부여 레벨
      * @return this
+     * @throws IllegalArgumentException 만약 마법 부여(enchantment)가 null이거나 레벨(level)이 1 미만일 경우
      */
     public ItemBuilder addEnchantment(Enchantment enchantment, int level) {
+        if (enchantment == null) {
+            throw new IllegalArgumentException("마법 부여(enchantment)는 null이 될 수 없습니다.");
+        }
+        if (level < 1) {
+            throw new IllegalArgumentException("마법 부여 레벨(level)은 1보다 작을 수 없습니다.");
+        }
         meta.addEnchant(enchantment, level, true);
         return this;
     }
@@ -131,12 +142,17 @@ public class ItemBuilder {
      *
      * @param owner 스컬 아이템의 소유자 UUID
      * @return this
+     * @throws IllegalArgumentException 만약 소유자(owner)가 null이거나 meta가 SkullMeta의 인스턴스가 아닐 경우
      */
     public ItemBuilder setOwner(UUID owner) {
-        if (meta instanceof SkullMeta) {
-            OfflinePlayer player = Bukkit.getOfflinePlayer(owner);
-            ((SkullMeta) meta).setOwningPlayer(player);
+        if (owner == null) {
+            throw new IllegalArgumentException("소유자 UUID(owner)는 null이 될 수 없습니다.");
         }
+        if (!(meta instanceof SkullMeta)) {
+            throw new IllegalArgumentException("ItemMeta는 SkullMeta의 인스턴스여야 합니다.");
+        }
+        OfflinePlayer player = Bukkit.getOfflinePlayer(owner);
+        ((SkullMeta) meta).setOwningPlayer(player);
         return this;
     }
 
