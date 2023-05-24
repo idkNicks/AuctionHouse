@@ -23,7 +23,7 @@ public class AuctionItemExpiryScheduler extends BukkitRunnable {
             if (item.expiryTime().isBefore(LocalDateTime.now())) {
                 PlayerItemStorage.storeItem(item.sellerId(), item.itemStack());
                 itemStorage.removeItem(item);
-                System.out.println("잡혔음.");
+                System.out.println("아이템이 만료됐음.");
             }
         }
     }

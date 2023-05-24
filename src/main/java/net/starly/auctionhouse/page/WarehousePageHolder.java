@@ -41,5 +41,4 @@ public class WarehousePageHolder extends PaginationHolder<WarehouseItem> {
 
         return inventory;
     }
-
 }
