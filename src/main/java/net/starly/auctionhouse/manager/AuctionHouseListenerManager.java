@@ -13,6 +13,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
 
 import java.text.DecimalFormat;
@@ -44,14 +45,14 @@ public class AuctionHouseListenerManager {
                             " §6§l아이템스택 | §f " + item.itemStack().getType()
                     )).build();
 
-            PaginationManager paginationManager = new PaginationManager(items);
-            AuctionHousePageHolder paginationInventoryHolder = new AuctionHousePageHolder(paginationManager, paginationManager, 50, 48, 45);
+            PaginationManager<AuctionItem> paginationManager = new PaginationManager<>(items);
+            AuctionHousePageHolder<AuctionItem> paginationInventoryHolder = new AuctionHousePageHolder<>(paginationManager, paginationManager.toWarehousePaginationManager(), 50, 48, 45);
 
             openInventoryAndRegisterEvent(player, paginationInventoryHolder.getInventory());
         }
     }
 
-    public static void pageInventory(Player player, AuctionHousePageHolder paginationHolder) {
+    public static void pageInventory(Player player, AuctionHousePageHolder<AuctionItem> paginationHolder) {
         openInventoryAndRegisterEvent(player, paginationHolder.getInventory());
     }
 
@@ -90,7 +91,7 @@ public class AuctionHouseListenerManager {
                     if (listener != null) {
                         InventoryClickEvent.getHandlerList().unregister(listener);
                     }
-                    InventoryCloseEvent.getHandlerList().unregister(closeEventListener);
+                    HandlerList.unregisterAll(closeEventListener);
                 }
             }
         }, AuctionHouse.getInstance());
