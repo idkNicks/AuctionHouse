@@ -19,15 +19,13 @@ public abstract class InventoryListenerManager {
 
     protected static final Map<UUID, Listener> listenerMap = new HashMap<>();
 
-    protected abstract void onClick(InventoryClickEvent event);
     public void onClose(InventoryCloseEvent event) {}
-
+    protected abstract void onClick(InventoryClickEvent event);
     public abstract void openInventory(Player player);
-    public abstract void pageInventory(Player player, PaginationHolder paginationHolder);
 
     protected void openInventoryAndRegisterEvent(Player player, Inventory inventory) {
         player.openInventory(inventory);
-        Listener listener = registerInventoryClickEvent(player.getUniqueId(), inventory);
+        Listener listener = registerInventoryClickEvent(player.getUniqueId());
         listenerMap.put(player.getUniqueId(), listener);
         registerInventoryCloseEvent(player.getUniqueId(), this);
     }
@@ -52,7 +50,7 @@ public abstract class InventoryListenerManager {
         }, AuctionHouse.getInstance());
     }
 
-    protected Listener registerInventoryClickEvent(UUID uuid, Inventory inventory) {
+    protected Listener registerInventoryClickEvent(UUID uuid) {
         Server server = AuctionHouse.getInstance().getServer();
         Listener listener = new Listener() {};
 
@@ -65,5 +63,9 @@ public abstract class InventoryListenerManager {
         }, AuctionHouse.getInstance());
 
         return listener;
+    }
+
+    public void pageInventory(Player player, PaginationHolder paginationHolder) {
+        openInventoryAndRegisterEvent(player, paginationHolder.getInventory());
     }
 }

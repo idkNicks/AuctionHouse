@@ -35,8 +35,8 @@ public class AuctionHouseInventoryManager extends InventoryListenerManager {
 
     @Override
     protected void onClick(InventoryClickEvent event) {
-        final Player player = (Player) event.getWhoClicked();
-        Inventory inventory = event.getInventory();
+        Player player = (Player) event.getWhoClicked();
+        Inventory inventory = event.getClickedInventory();
 
         event.setCancelled(true);
 
@@ -85,12 +85,8 @@ public class AuctionHouseInventoryManager extends InventoryListenerManager {
             PaginationManager<AuctionItem> paginationManager = new PaginationManager<>(items);
             AuctionHousePageHolder<AuctionItem> paginationInventoryHolder = new AuctionHousePageHolder<>(paginationManager, paginationManager.toWarehousePaginationManager(), 50, 48, 45);
 
+            System.out.println("등록 완료");
             openInventoryAndRegisterEvent(player, paginationInventoryHolder.getInventory());
         }
-    }
-
-    @Override
-    public void pageInventory(Player player, PaginationHolder paginationHolder) {
-        openInventoryAndRegisterEvent(player, paginationHolder.getInventory());
     }
 }

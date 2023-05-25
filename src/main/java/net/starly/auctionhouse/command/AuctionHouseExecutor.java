@@ -37,7 +37,7 @@ public class AuctionHouseExecutor implements TabExecutor {
         switch (args[0]) {
 
             case "판매", "sell" -> {
-                final long price;
+                long price;
 
                 try {
                     price = Long.parseLong(args[1]);
@@ -46,7 +46,7 @@ public class AuctionHouseExecutor implements TabExecutor {
                     return true;
                 }
 
-                final int amount = Integer.parseInt(args[2]);
+                int amount = Integer.parseInt(args[2]);
 
                 ItemStack itemStack = player.getInventory().getItemInMainHand();
                 if (itemStack.getType() == Material.AIR) {
