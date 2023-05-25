@@ -1,5 +1,6 @@
 package net.starly.auctionhouse.builder;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -33,9 +34,7 @@ public class ItemBuilder {
     }
 
     public ItemBuilder setName(String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("이름(name)은 null이 될 수 없습니다.");
-        }
+        Preconditions.checkNotNull(name, "이름(name)은 null이 될 수 없습니다.");
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
         return this;
     }
@@ -62,12 +61,8 @@ public class ItemBuilder {
     }
 
     public ItemBuilder addEnchantment(Enchantment enchantment, int level) {
-        if (enchantment == null) {
-            throw new IllegalArgumentException("마법 부여(enchantment)는 null이 될 수 없습니다.");
-        }
-        if (level < 1) {
-            throw new IllegalArgumentException("마법 부여 레벨(level)은 1보다 작을 수 없습니다.");
-        }
+        Preconditions.checkArgument(enchantment != null, "마법 부여(enchantment)는 null이 될 수 없습니다.");
+        Preconditions.checkArgument(level >= 1, "마법 부여 레벨(level)은 1보다 작을 수 없습니다.");
         meta.addEnchant(enchantment, level, true);
         return this;
     }
@@ -78,12 +73,8 @@ public class ItemBuilder {
     }
 
     public ItemBuilder setOwner(UUID owner) {
-        if (owner == null) {
-            throw new IllegalArgumentException("소유자 UUID(owner)는 null이 될 수 없습니다.");
-        }
-        if (!(meta instanceof SkullMeta)) {
-            throw new IllegalArgumentException("ItemMeta는 SkullMeta의 인스턴스여야 합니다.");
-        }
+        Preconditions.checkNotNull(owner, "소유자 UUID(owner)는 null이 될 수 없습니다.");
+        Preconditions.checkArgument(meta instanceof SkullMeta, "ItemMeta는 SkullMeta의 인스턴스여야 합니다.");
         OfflinePlayer player = Bukkit.getOfflinePlayer(owner);
         ((SkullMeta) meta).setOwningPlayer(player);
         return this;

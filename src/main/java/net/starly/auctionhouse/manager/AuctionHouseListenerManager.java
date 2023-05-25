@@ -2,35 +2,72 @@ package net.starly.auctionhouse.manager;
 
 import net.starly.auctionhouse.AuctionHouse;
 import net.starly.auctionhouse.entity.impl.AuctionItem;
-import net.starly.auctionhouse.inventory.AuctionHouseInventory;
 import net.starly.auctionhouse.page.AuctionHousePageHolder;
+import net.starly.auctionhouse.page.PaginationHolder;
 import net.starly.auctionhouse.page.PaginationManager;
 import net.starly.auctionhouse.storage.AuctionItemStorage;
 import net.starly.auctionhouse.builder.ItemBuilder;
-import org.bukkit.Server;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
-public class AuctionHouseListenerManager {
+public class AuctionHouseListenerManager extends InventoryListenerManager {
 
-    private static final Map<UUID, Listener> listenerMap = new HashMap<>();
+    private static AuctionHouseListenerManager instance;
+
+    private AuctionHouseListenerManager() {}
+
+    public static AuctionHouseListenerManager getInstance() {
+        if (instance == null) instance = new AuctionHouseListenerManager();
+        return instance;
+    }
+
     private static DecimalFormat priceFormat = new DecimalFormat("#,##0");
     private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시mm분ss초");
 
-    public static void openAuctionHouse(Player player) {
+    @Override
+    protected void onClick(InventoryClickEvent event) {
+        final Player player = (Player) event.getWhoClicked();
+        Inventory inventory = event.getInventory();
+
+        event.setCancelled(true);
+
+        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
+
+        AuctionHousePageHolder paginationHolder = (AuctionHousePageHolder) inventory.getHolder();
+        PaginationManager paginationManager = paginationHolder.getPaginationManager();
+
+        if (event.getSlot() == paginationHolder.getPrevButtonSlot()) {
+            if (!paginationManager.hasPrevPage()) return;
+            paginationManager.prevPage();
+            pageInventory(player, paginationHolder);
+            player.playSound(player.getLocation(), Sound.valueOf("ITEM_BOOK_PAGE_TURN"), 2, 1);
+        }
+
+        if (event.getSlot() == paginationHolder.getNextButtonSlot()) {
+            if (!paginationManager.hasNextPage()) return;
+            paginationManager.nextPage();
+            pageInventory(player, paginationHolder);
+            player.playSound(player.getLocation(), Sound.valueOf("ITEM_BOOK_PAGE_TURN"), 2, 1);
+        }
+
+        if (event.getSlot() == paginationHolder.getWarehouseButtonSlot()) {
+            WarehouseListenerManager warehouseListenerManager = WarehouseListenerManager.getInstance();
+            warehouseListenerManager.openInventory(player);
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 2, 1);
+        }
+    }
+
+    @Override
+    public void openInventory(Player player) {
         List<AuctionItem> items = AuctionItemStorage.loadItems();
         for (AuctionItem item : items) {
             UUID sellerUuid = item.sellerId();
@@ -52,48 +89,8 @@ public class AuctionHouseListenerManager {
         }
     }
 
-    public static void pageInventory(Player player, AuctionHousePageHolder<AuctionItem> paginationHolder) {
+    @Override
+    public void pageInventory(Player player, PaginationHolder paginationHolder) {
         openInventoryAndRegisterEvent(player, paginationHolder.getInventory());
-    }
-
-    private static void openInventoryAndRegisterEvent(Player player, Inventory inventory) {
-        player.openInventory(inventory);
-        Listener listener = registerInventoryClickEvent(player.getUniqueId(), inventory);
-        listenerMap.put(player.getUniqueId(), listener);
-        registerInventoryCloseEvent(player.getUniqueId());
-    }
-
-    private static Listener registerInventoryClickEvent(UUID uuid, Inventory inventory) {
-        Server server = AuctionHouse.getInstance().getServer();
-        AuctionHouseInventory auctionHouseInventory = new AuctionHouseInventory(inventory);
-        Listener listener = new Listener() {};
-
-        server.getPluginManager().registerEvent(InventoryClickEvent.class, listener, EventPriority.LOWEST, (listeners, event) -> {
-            if (event instanceof InventoryClickEvent) {
-                InventoryClickEvent clickEvent = (InventoryClickEvent) event;
-                if (uuid.equals(clickEvent.getWhoClicked().getUniqueId()))
-                    auctionHouseInventory.onClick(clickEvent);
-            }
-        }, AuctionHouse.getInstance());
-
-        return listener;
-    }
-
-    private static void registerInventoryCloseEvent(UUID uuid) {
-        Server server = AuctionHouse.getInstance().getServer();
-        Listener closeEventListener = new Listener() {};
-
-        server.getPluginManager().registerEvent(InventoryCloseEvent.class, closeEventListener, EventPriority.LOWEST, (listeners, event) -> {
-            if (event instanceof InventoryCloseEvent) {
-                InventoryCloseEvent closeEvent = (InventoryCloseEvent) event;
-                if (uuid.equals(closeEvent.getPlayer().getUniqueId())) {
-                    Listener listener = listenerMap.remove(uuid);
-                    if (listener != null) {
-                        InventoryClickEvent.getHandlerList().unregister(listener);
-                    }
-                    HandlerList.unregisterAll(closeEventListener);
-                }
-            }
-        }, AuctionHouse.getInstance());
     }
 }
