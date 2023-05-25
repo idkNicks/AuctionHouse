@@ -1,7 +1,7 @@
 package net.starly.auctionhouse.command;
 
 import net.starly.auctionhouse.AuctionHouse;
-import net.starly.auctionhouse.manager.AuctionHouseListenerManager;
+import net.starly.auctionhouse.manager.AuctionHouseInventoryManager;
 import net.starly.auctionhouse.storage.AuctionItemStorage;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -29,7 +29,7 @@ public class AuctionHouseExecutor implements TabExecutor {
         Player player = (Player) sender;
 
         if (args.length == 0) {
-            AuctionHouseListenerManager auctionHouseListenerManager = AuctionHouseListenerManager.getInstance();
+            AuctionHouseInventoryManager auctionHouseListenerManager = AuctionHouseInventoryManager.getInstance();
             auctionHouseListenerManager.openInventory(player);
             return true;
         }

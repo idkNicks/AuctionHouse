@@ -19,14 +19,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
-public class AuctionHouseListenerManager extends InventoryListenerManager {
+public class AuctionHouseInventoryManager extends InventoryListenerManager {
 
-    private static AuctionHouseListenerManager instance;
+    private static AuctionHouseInventoryManager instance;
 
-    private AuctionHouseListenerManager() {}
+    private AuctionHouseInventoryManager() {}
 
-    public static AuctionHouseListenerManager getInstance() {
-        if (instance == null) instance = new AuctionHouseListenerManager();
+    public static AuctionHouseInventoryManager getInstance() {
+        if (instance == null) instance = new AuctionHouseInventoryManager();
         return instance;
     }
 
@@ -60,7 +60,7 @@ public class AuctionHouseListenerManager extends InventoryListenerManager {
         }
 
         if (event.getSlot() == paginationHolder.getWarehouseButtonSlot()) {
-            WarehouseListenerManager warehouseListenerManager = WarehouseListenerManager.getInstance();
+            WarehouseInventoryManager warehouseListenerManager = WarehouseInventoryManager.getInstance();
             warehouseListenerManager.openInventory(player);
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 2, 1);
         }

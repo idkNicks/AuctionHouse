@@ -6,7 +6,6 @@ import net.starly.auctionhouse.page.PaginationManager;
 import net.starly.auctionhouse.page.WarehousePageHolder;
 import net.starly.auctionhouse.storage.PlayerItemStorage;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
@@ -14,14 +13,14 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 
-public class WarehouseListenerManager extends InventoryListenerManager {
+public class WarehouseInventoryManager extends InventoryListenerManager {
 
-    private static WarehouseListenerManager instance;
+    private static WarehouseInventoryManager instance;
 
-    private WarehouseListenerManager() {}
+    private WarehouseInventoryManager() {}
 
-    public static WarehouseListenerManager getInstance() {
-        if (instance == null) instance = new WarehouseListenerManager();
+    public static WarehouseInventoryManager getInstance() {
+        if (instance == null) instance = new WarehouseInventoryManager();
         return instance;
     }
 
@@ -36,8 +35,8 @@ public class WarehouseListenerManager extends InventoryListenerManager {
     @Override
     public void onClose(InventoryCloseEvent event) {
         Player player = (Player) event.getPlayer();
-
-        player.sendMessage("닫았네");
+        AuctionHouseInventoryManager auctionHouseInventoryManager = AuctionHouseInventoryManager.getInstance();
+        auctionHouseInventoryManager.openInventory(player);
     }
 
     @Override
