@@ -3,16 +3,14 @@ package net.starly.auctionhouse.storage;
 import lombok.Getter;
 import net.starly.auctionhouse.AuctionHouse;
 import net.starly.auctionhouse.entity.impl.WarehouseItem;
+import net.starly.auctionhouse.util.ItemSerializationUtil;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,7 +20,7 @@ public class PlayerItemStorage {
     @Getter private static final File PLAYER_ITEMS_FILE = new File(AuctionHouse.getInstance().getDataFolder(), "playeritems.db");
 
     public static void storeItem(UUID playerId, WarehouseItem item) {
-        String serializedItemStack = serializeItemStack(item.itemStack());
+        String serializedItemStack = ItemSerializationUtil.serializeItemStack(item.itemStack());
         String line = playerId + "," + serializedItemStack;
 
         if (!PLAYER_ITEMS_FILE.exists()) {
@@ -39,7 +37,7 @@ public class PlayerItemStorage {
 
     public static void removeItem(UUID playerId, WarehouseItem item) {
         try {
-            String itemString = serializeItemStack(item.itemStack());
+            String itemString = ItemSerializationUtil.serializeItemStack(item.itemStack());
             List<String> lines = Files.readAllLines(PLAYER_ITEMS_FILE.toPath(), StandardCharsets.UTF_8);
             List<String> updatedLines = new ArrayList<>();
             boolean itemRemoved = false;
@@ -75,37 +73,13 @@ public class PlayerItemStorage {
                     }
                     if (savedPlayerId.equals(playerId)) {
                         try {
-                            WarehouseItem itemStack = deserializeItemStack(parts[1]);
-                            items.add(itemStack);
+                            ItemStack itemStack = ItemSerializationUtil.deserializeItemStack(parts[1]);
+                            items.add(new WarehouseItem(itemStack));
                         } catch (Exception ex) { ex.printStackTrace(); }
                     }
                 }
             }
         } catch (IOException e) { e.printStackTrace(); }
         return items;
-    }
-
-    public static String serializeItemStack(ItemStack itemStack) {
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream)) {
-
-            dataOutput.writeObject(itemStack);
-            return Base64.getEncoder().encodeToString(outputStream.toByteArray());
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static WarehouseItem deserializeItemStack(String serializedItemStack) {
-        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(serializedItemStack));
-             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
-
-            ItemStack itemStack = (ItemStack) dataInput.readObject();
-            return new WarehouseItem(itemStack);
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 }
