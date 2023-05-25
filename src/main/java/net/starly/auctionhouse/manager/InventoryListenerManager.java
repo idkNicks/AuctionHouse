@@ -18,11 +18,11 @@ import java.util.UUID;
 public abstract class InventoryListenerManager {
 
     protected static final Map<UUID, Listener> listenerMap = new HashMap<>();
+
     protected abstract void onClick(InventoryClickEvent event);
     public void onClose(InventoryCloseEvent event) {}
 
     public abstract void openInventory(Player player);
-
     public abstract void pageInventory(Player player, PaginationHolder paginationHolder);
 
     protected void openInventoryAndRegisterEvent(Player player, Inventory inventory) {

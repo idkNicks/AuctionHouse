@@ -1,28 +1,22 @@
 package net.starly.auctionhouse.manager;
 
-import net.starly.auctionhouse.AuctionHouse;
 import net.starly.auctionhouse.entity.impl.WarehouseItem;
 import net.starly.auctionhouse.page.PaginationHolder;
 import net.starly.auctionhouse.page.PaginationManager;
 import net.starly.auctionhouse.page.WarehousePageHolder;
 import net.starly.auctionhouse.storage.PlayerItemStorage;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
-import java.util.UUID;
 
 
 public class WarehouseListenerManager extends InventoryListenerManager {
 
     private static WarehouseListenerManager instance;
-    private Listener listener;
 
     private WarehouseListenerManager() {}
 
