@@ -83,7 +83,7 @@ public class AuctionHouseInventoryManager extends InventoryListenerManager {
                     )).build();
 
             PaginationManager<AuctionItem> paginationManager = new PaginationManager<>(items);
-            AuctionHousePageHolder<AuctionItem> paginationInventoryHolder = new AuctionHousePageHolder<>(paginationManager, paginationManager.toWarehousePaginationManager(), 50, 48, 45);
+            AuctionHousePageHolder<AuctionItem> paginationInventoryHolder = new AuctionHousePageHolder<>(paginationManager, 50, 48, 45);
 
             System.out.println("등록 완료");
             openInventoryAndRegisterEvent(player, paginationInventoryHolder.getInventory());

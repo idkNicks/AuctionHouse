@@ -1,6 +1,7 @@
 package net.starly.auctionhouse.page;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.starly.auctionhouse.entity.AuctionItemOrStack;
 import net.starly.auctionhouse.entity.impl.WarehouseItem;
 
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 public class PaginationManager<T extends AuctionItemOrStack> {
 
     private final List<AuctionHousePage<T>> pages;

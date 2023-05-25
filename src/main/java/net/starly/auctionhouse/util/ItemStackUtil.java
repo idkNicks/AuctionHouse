@@ -1,5 +1,6 @@
 package net.starly.auctionhouse.util;
 
+import net.starly.auctionhouse.entity.impl.WarehouseItem;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -23,11 +24,12 @@ public class ItemStackUtil {
         }
     }
 
-    public static ItemStack deserializeItemStack(String serializedItemStack) {
+    public static WarehouseItem deserializeItemStack(String serializedItemStack) {
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(serializedItemStack));
              BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
 
-            return (ItemStack) dataInput.readObject();
+            ItemStack itemStack = (ItemStack) dataInput.readObject();
+            return new WarehouseItem(itemStack);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;

@@ -1,20 +1,34 @@
 package net.starly.auctionhouse.manager;
 
 import net.starly.auctionhouse.AuctionHouse;
+import net.starly.auctionhouse.builder.ItemBuilder;
+import net.starly.auctionhouse.entity.impl.AuctionItem;
 import net.starly.auctionhouse.entity.impl.WarehouseItem;
 import net.starly.auctionhouse.page.AuctionHousePageHolder;
-import net.starly.auctionhouse.page.PaginationHolder;
 import net.starly.auctionhouse.page.PaginationManager;
 import net.starly.auctionhouse.page.WarehousePageHolder;
 import net.starly.auctionhouse.storage.PlayerItemStorage;
+import net.starly.auctionhouse.util.ItemStackUtil;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 public class WarehouseInventoryManager extends InventoryListenerManager {
 
@@ -35,42 +49,44 @@ public class WarehouseInventoryManager extends InventoryListenerManager {
         event.setCancelled(true);
 
         WarehousePageHolder warehousePageHolder = (WarehousePageHolder) inventory.getHolder();
-        PaginationManager paginationManager = warehousePageHolder.getPaginationManager();
+        PaginationManager<WarehouseItem> paginationManager = warehousePageHolder.getPaginationManager();
+
+        player.sendMessage("클릭함");
 
         if (event.getSlot() == warehousePageHolder.getPrevButtonSlot()) {
             if (!paginationManager.hasPrevPage()) return;
+            player.sendMessage("이전페이지");
             paginationManager.prevPage();
             pageInventory(player, warehousePageHolder);
             player.playSound(player.getLocation(), Sound.valueOf("ITEM_BOOK_PAGE_TURN"), 2, 1);
         }
 
-        else if (event.getSlot() == warehousePageHolder.getNextButtonSlot()) {
+        if (event.getSlot() == warehousePageHolder.getNextButtonSlot()) {
             if (!paginationManager.hasNextPage()) return;
+            player.sendMessage("다음페이지");
             paginationManager.nextPage();
             pageInventory(player, warehousePageHolder);
             player.playSound(player.getLocation(), Sound.valueOf("ITEM_BOOK_PAGE_TURN"), 2, 1);
         }
-
-        else {
-
-        }
     }
+
+
 
     @Override
     public void onClose(InventoryCloseEvent event) {
-        Player player = (Player) event.getPlayer();
-        AuctionHouseInventoryManager auctionHouseInventoryManager = AuctionHouseInventoryManager.getInstance();
-        AuctionHouse.getInstance().getServer().getScheduler().runTaskLater(AuctionHouse.getInstance(), () ->
-                auctionHouseInventoryManager.openInventory(player), 1);
+//        Player player = (Player) event.getPlayer();
+//        AuctionHouseInventoryManager auctionHouseInventoryManager = AuctionHouseInventoryManager.getInstance();
+//        AuctionHouse.getInstance().getServer().getScheduler().runTaskLater(AuctionHouse.getInstance(), () ->
+//                auctionHouseInventoryManager.openInventory(player), 1);
     }
 
     @Override
     public void openInventory(Player player) {
-        List<ItemStack> items = PlayerItemStorage.loadExpiredItem(player.getUniqueId());
+        List<WarehouseItem> items = PlayerItemStorage.loadExpiredItem(player.getUniqueId());
 
-        PaginationManager<WarehouseItem> warehousePaginationManager = new PaginationManager(items);
-        WarehousePageHolder warehouseHolder = new WarehousePageHolder(player.getUniqueId(), warehousePaginationManager, 50, 48);
+        PaginationManager<WarehouseItem> paginationManager = new PaginationManager<>(items);
+        WarehousePageHolder<WarehouseItem> paginationInventoryHolder = new WarehousePageHolder<>(player.getUniqueId(), paginationManager, 50, 48);
 
-        openInventoryAndRegisterEvent(player, warehouseHolder.getInventory());
+        openInventoryAndRegisterEvent(player, paginationInventoryHolder.getInventory());
     }
 }

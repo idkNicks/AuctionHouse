@@ -2,6 +2,7 @@ package net.starly.auctionhouse.listener;
 
 import net.starly.auctionhouse.AuctionHouse;
 import net.starly.auctionhouse.entity.impl.AuctionItem;
+import net.starly.auctionhouse.entity.impl.WarehouseItem;
 import net.starly.auctionhouse.event.AuctionItemExpiryEvent;
 import net.starly.auctionhouse.storage.AuctionItemStorage;
 import net.starly.auctionhouse.storage.PlayerItemStorage;
@@ -20,7 +21,8 @@ public class AuctionItemExpiryListener implements Listener {
         if (player != null && player.isOnline()) {
             player.getInventory().addItem(expiredItem.itemStack());
         } else {
-            PlayerItemStorage.storeItem(expiredItem.sellerId(), expiredItem.itemStack());
+            PlayerItemStorage.storeItem(expiredItem.sellerId(), new WarehouseItem(expiredItem.getItemStack()));
+
         }
     }
 }
