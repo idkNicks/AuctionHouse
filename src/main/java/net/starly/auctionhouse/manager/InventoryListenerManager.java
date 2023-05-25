@@ -61,7 +61,6 @@ public abstract class InventoryListenerManager {
                     onClick(clickEvent);
             }
         }, AuctionHouse.getInstance());
-
         return listener;
     }
 

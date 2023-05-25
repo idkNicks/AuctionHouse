@@ -22,14 +22,11 @@ public class AuctionHousePageHolder<T extends AuctionItemOrStack> extends Pagina
     public @NotNull Inventory getInventory() {
         Inventory inventory = createInventory("거래소 [" + getCurrentPage() + "]");
 
-        try {
-            AuctionHousePage<T> currentPage = paginationManager.getCurrentPageData();
+        AuctionHousePage<T> currentPage = paginationManager.getCurrentPageData();
 
-            for (int i = 0; i < currentPage.itemStacks().size(); i++) {
-                inventory.setItem(i, currentPage.itemStacks().get(i).getItemStack());
-            }
-
-        } catch (IndexOutOfBoundsException ignored) {}
+        for (int i = 0; i < currentPage.itemStacks().size(); i++) {
+            inventory.setItem(i, currentPage.itemStacks().get(i).getItemStack());
+        }
 
         ItemStack warehouseItem = new ItemBuilder(Material.CHEST)
                 .setName("만료된 아이템")

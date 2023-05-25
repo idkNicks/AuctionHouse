@@ -3,7 +3,6 @@ package net.starly.auctionhouse.storage;
 import lombok.Getter;
 import net.starly.auctionhouse.AuctionHouse;
 import net.starly.auctionhouse.entity.impl.WarehouseItem;
-import net.starly.auctionhouse.util.ItemStackUtil;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -23,7 +22,7 @@ public class PlayerItemStorage {
     @Getter private static final File PLAYER_ITEMS_FILE = new File(AuctionHouse.getInstance().getDataFolder(), "playeritems.db");
 
     public static void storeItem(UUID playerId, WarehouseItem item) {
-        String serializedItemStack = ItemStackUtil.serializeItemStack(item.itemStack());
+        String serializedItemStack = serializeItemStack(item.itemStack());
         String line = playerId + "," + serializedItemStack;
 
         if (!PLAYER_ITEMS_FILE.exists()) {
@@ -40,7 +39,7 @@ public class PlayerItemStorage {
 
     public static void removeItem(UUID playerId, WarehouseItem item) {
         try {
-            String itemString = ItemStackUtil.serializeItemStack(item.itemStack());
+            String itemString = serializeItemStack(item.itemStack());
             List<String> lines = Files.readAllLines(PLAYER_ITEMS_FILE.toPath(), StandardCharsets.UTF_8);
             List<String> updatedLines = new ArrayList<>();
             boolean itemRemoved = false;
@@ -59,7 +58,6 @@ public class PlayerItemStorage {
         } catch (IOException e) { e.printStackTrace(); }
     }
 
-
     public static List<WarehouseItem> loadExpiredItem(UUID playerId) {
         List<WarehouseItem> items = new ArrayList<>();
 
@@ -77,7 +75,7 @@ public class PlayerItemStorage {
                     }
                     if (savedPlayerId.equals(playerId)) {
                         try {
-                            WarehouseItem itemStack = ItemStackUtil.deserializeItemStack(parts[1]);
+                            WarehouseItem itemStack = deserializeItemStack(parts[1]);
                             items.add(itemStack);
                         } catch (Exception ex) { ex.printStackTrace(); }
                     }
@@ -87,7 +85,7 @@ public class PlayerItemStorage {
         return items;
     }
 
-    public static String serializeItemStack(WarehouseItem itemStack) {
+    public static String serializeItemStack(ItemStack itemStack) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
              BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream)) {
 
@@ -103,7 +101,8 @@ public class PlayerItemStorage {
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(serializedItemStack));
              BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
 
-            return (WarehouseItem) dataInput.readObject();
+            ItemStack itemStack = (ItemStack) dataInput.readObject();
+            return new WarehouseItem(itemStack);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;

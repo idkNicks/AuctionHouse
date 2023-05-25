@@ -27,7 +27,6 @@ public class WarehousePageHolder<T extends AuctionItemOrStack> extends Paginatio
             for (int i = 0; i < currentPage.itemStacks().size(); i++) {
                 inventory.setItem(i, currentPage.itemStacks().get(i).getItemStack());
             }
-
         } catch (IndexOutOfBoundsException ignored) {}
 
         inventory.setItem(50, createNextPageItem());

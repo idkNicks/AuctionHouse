@@ -3,7 +3,6 @@ package net.starly.auctionhouse.manager;
 import net.starly.auctionhouse.AuctionHouse;
 import net.starly.auctionhouse.entity.impl.AuctionItem;
 import net.starly.auctionhouse.page.AuctionHousePageHolder;
-import net.starly.auctionhouse.page.PaginationHolder;
 import net.starly.auctionhouse.page.PaginationManager;
 import net.starly.auctionhouse.storage.AuctionItemStorage;
 import net.starly.auctionhouse.builder.ItemBuilder;
@@ -85,7 +84,6 @@ public class AuctionHouseInventoryManager extends InventoryListenerManager {
             PaginationManager<AuctionItem> paginationManager = new PaginationManager<>(items);
             AuctionHousePageHolder<AuctionItem> paginationInventoryHolder = new AuctionHousePageHolder<>(paginationManager, 50, 48, 45);
 
-            System.out.println("등록 완료");
             openInventoryAndRegisterEvent(player, paginationInventoryHolder.getInventory());
         }
     }

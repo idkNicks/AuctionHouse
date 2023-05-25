@@ -3,7 +3,6 @@ package net.starly.auctionhouse.page;
 import lombok.Getter;
 import lombok.Setter;
 import net.starly.auctionhouse.entity.AuctionItemOrStack;
-import net.starly.auctionhouse.entity.impl.WarehouseItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,17 +44,5 @@ public class PaginationManager<T extends AuctionItemOrStack> {
             pages.add(new AuctionHousePage<>(i + 1, pageItems));
         }
         return pages;
-    }
-
-    public PaginationManager<WarehouseItem> toWarehousePaginationManager() {
-        List<WarehouseItem> warehouseItems = new ArrayList<>();
-        for (AuctionHousePage<T> page : pages) {
-            for (T item : page.itemStacks()) {
-                if (item instanceof WarehouseItem) {
-                    warehouseItems.add((WarehouseItem) item);
-                }
-            }
-        }
-        return new PaginationManager<>(warehouseItems);
     }
 }
