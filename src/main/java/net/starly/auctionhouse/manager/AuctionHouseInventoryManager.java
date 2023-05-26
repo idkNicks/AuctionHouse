@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
-public class AuctionHouseInventoryManager extends InventoryListenerManager {
+public class AuctionHouseInventoryManager extends InventoryListenerBase {
 
     private static AuctionHouseInventoryManager instance;
 

@@ -1,8 +1,6 @@
 package net.starly.auctionhouse.manager;
 
-import net.starly.auctionhouse.builder.ItemBuilder;
 import net.starly.auctionhouse.page.PaginationHolder;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
@@ -17,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public abstract class InventoryListenerManager {
+public abstract class InventoryListenerBase {
 
     protected static final Map<UUID, Listener> listenerMap = new HashMap<>();
 
@@ -32,7 +30,7 @@ public abstract class InventoryListenerManager {
         registerInventoryCloseEvent(player.getUniqueId(), this);
     }
 
-    protected void registerInventoryCloseEvent(UUID uuid, InventoryListenerManager listenerManager) {
+    protected void registerInventoryCloseEvent(UUID uuid, InventoryListenerBase listenerManager) {
         Server server = AuctionHouse.getInstance().getServer();
         Listener closeEventListener = new Listener() {};
 

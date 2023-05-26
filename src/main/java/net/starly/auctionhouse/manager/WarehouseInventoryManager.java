@@ -1,7 +1,6 @@
 package net.starly.auctionhouse.manager;
 
 import net.starly.auctionhouse.entity.impl.WarehouseItem;
-import net.starly.auctionhouse.page.AuctionHousePage;
 import net.starly.auctionhouse.page.PaginationManager;
 import net.starly.auctionhouse.page.WarehousePageHolder;
 import net.starly.auctionhouse.storage.PlayerItemStorage;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class WarehouseInventoryManager extends InventoryListenerManager {
+public class WarehouseInventoryManager extends InventoryListenerBase {
 
     private static WarehouseInventoryManager instance;
 
