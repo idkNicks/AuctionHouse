@@ -1,6 +1,8 @@
 package net.starly.auctionhouse.manager;
 
+import net.starly.auctionhouse.builder.ItemBuilder;
 import net.starly.auctionhouse.page.PaginationHolder;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;

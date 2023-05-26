@@ -2,12 +2,10 @@ package net.starly.auctionhouse.page;
 
 import lombok.Getter;
 import net.starly.auctionhouse.AuctionHouse;
-import net.starly.auctionhouse.builder.ItemBuilder;
 import net.starly.auctionhouse.entity.AuctionItemOrStack;
-import org.bukkit.Material;
+import net.starly.auctionhouse.util.PaginationItemUtil;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
@@ -30,12 +28,12 @@ public abstract class PaginationHolder<T extends AuctionItemOrStack> implements 
         Inventory inventory = createInventory("[" + paginationManager.getCurrentPage() + "]");
         AuctionHousePage<T> currentPage = paginationManager.getCurrentPageData();
 
-        for (int i = 0; i < currentPage.itemStacks().size(); i++) {
-            inventory.setItem(i, currentPage.itemStacks().get(i).getItemStack());
+        for (int i = 0; i < currentPage.getItemStacks().size(); i++) {
+            inventory.setItem(i, currentPage.getItemStacks().get(i).getItemStack());
         }
 
-        inventory.setItem(nextButtonSlot, createNextPageItem());
-        inventory.setItem(prevButtonSlot, createPrevPageItem());
+        inventory.setItem(nextButtonSlot, PaginationItemUtil.createNextPageItem());
+        inventory.setItem(prevButtonSlot, PaginationItemUtil.createPrevPageItem());
 
         return inventory;
     }
@@ -46,17 +44,5 @@ public abstract class PaginationHolder<T extends AuctionItemOrStack> implements 
 
     protected int getCurrentPage() {
         return paginationManager.getCurrentPage();
-    }
-
-    protected @NotNull ItemStack createNextPageItem() {
-        return new ItemBuilder(Material.ARROW)
-                .setName("다음 페이지")
-                .build();
-    }
-
-    protected @NotNull ItemStack createPrevPageItem() {
-        return new ItemBuilder(Material.ARROW)
-                .setName("이전 페이지")
-                .build();
     }
 }

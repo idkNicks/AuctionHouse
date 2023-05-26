@@ -6,6 +6,7 @@ import net.starly.auctionhouse.page.AuctionHousePageHolder;
 import net.starly.auctionhouse.page.PaginationManager;
 import net.starly.auctionhouse.storage.AuctionItemStorage;
 import net.starly.auctionhouse.builder.ItemBuilder;
+import net.starly.auctionhouse.util.PaginationItemUtil;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -22,7 +23,8 @@ public class AuctionHouseInventoryManager extends InventoryListenerManager {
 
     private static AuctionHouseInventoryManager instance;
 
-    private AuctionHouseInventoryManager() {}
+    private AuctionHouseInventoryManager() {
+    }
 
     public static AuctionHouseInventoryManager getInstance() {
         if (instance == null) instance = new AuctionHouseInventoryManager();
@@ -40,6 +42,14 @@ public class AuctionHouseInventoryManager extends InventoryListenerManager {
         event.setCancelled(true);
 
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
+        if (!(inventory.getHolder() instanceof AuctionHousePageHolder)) {
+            if (event.getSlot() == 45) {
+                WarehouseInventoryManager warehouseListenerManager = WarehouseInventoryManager.getInstance();
+                warehouseListenerManager.openInventory(player);
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 2, 1);
+            }
+            return;
+        }
 
         AuctionHousePageHolder paginationHolder = (AuctionHousePageHolder) inventory.getHolder();
         PaginationManager paginationManager = paginationHolder.getPaginationManager();
@@ -49,16 +59,12 @@ public class AuctionHouseInventoryManager extends InventoryListenerManager {
             paginationManager.prevPage();
             pageInventory(player, paginationHolder);
             player.playSound(player.getLocation(), Sound.valueOf("ITEM_BOOK_PAGE_TURN"), 2, 1);
-        }
-
-        if (event.getSlot() == paginationHolder.getNextButtonSlot()) {
+        } else if (event.getSlot() == paginationHolder.getNextButtonSlot()) {
             if (!paginationManager.hasNextPage()) return;
             paginationManager.nextPage();
             pageInventory(player, paginationHolder);
             player.playSound(player.getLocation(), Sound.valueOf("ITEM_BOOK_PAGE_TURN"), 2, 1);
-        }
-
-        if (event.getSlot() == paginationHolder.getWarehouseButtonSlot()) {
+        } else if (event.getSlot() == paginationHolder.getWarehouseButtonSlot()) {
             WarehouseInventoryManager warehouseListenerManager = WarehouseInventoryManager.getInstance();
             warehouseListenerManager.openInventory(player);
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 2, 1);
@@ -68,6 +74,19 @@ public class AuctionHouseInventoryManager extends InventoryListenerManager {
     @Override
     public void openInventory(Player player) {
         List<AuctionItem> items = AuctionItemStorage.loadItems();
+
+        if (items.isEmpty()) {
+            Inventory inventory = AuctionHouse.getInstance().getServer().createInventory(null, 54, "유저거래소 [1]");
+            inventory.setItem(45, PaginationItemUtil.createWarehouseItem());
+            inventory.setItem(50, PaginationItemUtil.createNextPageItem());
+            inventory.setItem(48, PaginationItemUtil.createPrevPageItem());
+            openInventoryAndRegisterEvent(player, inventory);
+            return;
+        }
+
+        PaginationManager<AuctionItem> paginationManager = new PaginationManager<>(items);
+        AuctionHousePageHolder<AuctionItem> paginationInventoryHolder = new AuctionHousePageHolder<>(paginationManager, 50, 48, 45);
+
         for (AuctionItem item : items) {
             UUID sellerUuid = item.sellerId();
             long price = item.price();
@@ -80,11 +99,7 @@ public class AuctionHouseInventoryManager extends InventoryListenerManager {
                             " §6§l만료 시간 | §f" + dateFormatter.format(expirationTime),
                             " §6§l아이템스택 | §f " + item.itemStack().getType()
                     )).build();
-
-            PaginationManager<AuctionItem> paginationManager = new PaginationManager<>(items);
-            AuctionHousePageHolder<AuctionItem> paginationInventoryHolder = new AuctionHousePageHolder<>(paginationManager, 50, 48, 45);
-
-            openInventoryAndRegisterEvent(player, paginationInventoryHolder.getInventory());
         }
+        openInventoryAndRegisterEvent(player, paginationInventoryHolder.getInventory());
     }
 }

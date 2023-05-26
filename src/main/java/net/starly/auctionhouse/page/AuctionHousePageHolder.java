@@ -1,11 +1,9 @@
 package net.starly.auctionhouse.page;
 
 import lombok.Getter;
-import net.starly.auctionhouse.builder.ItemBuilder;
 import net.starly.auctionhouse.entity.AuctionItemOrStack;
-import org.bukkit.Material;
+import net.starly.auctionhouse.util.PaginationItemUtil;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
@@ -20,21 +18,17 @@ public class AuctionHousePageHolder<T extends AuctionItemOrStack> extends Pagina
 
     @Override
     public @NotNull Inventory getInventory() {
-        Inventory inventory = createInventory("거래소 [" + getCurrentPage() + "]");
+        Inventory inventory = createInventory("[" + getCurrentPage() + "]");
 
         AuctionHousePage<T> currentPage = paginationManager.getCurrentPageData();
 
-        for (int i = 0; i < currentPage.itemStacks().size(); i++) {
-            inventory.setItem(i, currentPage.itemStacks().get(i).getItemStack());
+        for (int i = 0; i < currentPage.getItemStacks().size(); i++) {
+            inventory.setItem(i, currentPage.getItemStacks().get(i).getItemStack());
         }
 
-        ItemStack warehouseItem = new ItemBuilder(Material.CHEST)
-                .setName("만료된 아이템")
-                .build();
-
-        inventory.setItem(warehouseButtonSlot, warehouseItem);
-        inventory.setItem(50, createNextPageItem());
-        inventory.setItem(48, createPrevPageItem());
+        inventory.setItem(warehouseButtonSlot, PaginationItemUtil.createWarehouseItem());
+        inventory.setItem(50, PaginationItemUtil.createNextPageItem());
+        inventory.setItem(48, PaginationItemUtil.createPrevPageItem());
 
         return inventory;
     }
