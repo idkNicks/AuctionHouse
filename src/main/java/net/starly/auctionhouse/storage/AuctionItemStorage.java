@@ -59,6 +59,15 @@ public class AuctionItemStorage {
     public static List<AuctionItem> loadItems() {
         List<AuctionItem> items = new ArrayList<>();
 
+        if (!FILE.exists()) {
+            try {
+                FILE.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return items;
+            }
+        }
+
         try {
             List<String> lines = Files.readAllLines(FILE.toPath(), StandardCharsets.UTF_8);
             for (String line : lines) {

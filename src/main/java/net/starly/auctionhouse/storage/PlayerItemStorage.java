@@ -59,6 +59,15 @@ public class PlayerItemStorage {
     public static List<WarehouseItem> loadExpiredItem(UUID playerId) {
         List<WarehouseItem> items = new ArrayList<>();
 
+        if (!PLAYER_ITEMS_FILE.exists()) {
+            try {
+                PLAYER_ITEMS_FILE.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return items;
+            }
+        }
+
         try {
             List<String> lines = Files.readAllLines(PLAYER_ITEMS_FILE.toPath(), StandardCharsets.UTF_8);
             for (String line : lines) {

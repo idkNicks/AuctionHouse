@@ -1,5 +1,6 @@
 package net.starly.auctionhouse.manager;
 
+import net.starly.auctionhouse.AuctionHouse;
 import net.starly.auctionhouse.entity.impl.WarehouseItem;
 import net.starly.auctionhouse.page.AuctionHousePageHolder;
 import net.starly.auctionhouse.page.PaginationManager;
@@ -78,17 +79,22 @@ public class WarehouseInventoryManager extends InventoryListenerBase {
                     player.sendMessage("이전페이지");
                     paginationManager.prevPage();
                 }
+                shouldOpenNewInventory = false;
                 pageInventory(player, warehousePageHolder);
             }
         }
     }
 
+    private boolean shouldOpenNewInventory = true;
+
     @Override
     public void onClose(InventoryCloseEvent event) {
-//        Player player = (Player) event.getPlayer();
-//        AuctionHouseInventoryManager auctionHouseInventoryManager = AuctionHouseInventoryManager.getInstance();
-//        AuctionHouse.getInstance().getServer().getScheduler().runTaskLater(AuctionHouse.getInstance(), () ->
-//                auctionHouseInventoryManager.openInventory(player), 1);
+        Player player = (Player) event.getPlayer();
+        if (shouldOpenNewInventory) {
+            AuctionHouseInventoryManager auctionHouseInventoryManager = AuctionHouseInventoryManager.getInstance();
+            AuctionHouse.getInstance().getServer().getScheduler().runTaskLater(AuctionHouse.getInstance(), () ->
+                    auctionHouseInventoryManager.openInventory(player), 1);
+        }
     }
 
     @Override

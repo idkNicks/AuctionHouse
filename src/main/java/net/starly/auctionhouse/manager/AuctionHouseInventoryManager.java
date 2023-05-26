@@ -1,7 +1,9 @@
 package net.starly.auctionhouse.manager;
 
+import net.milkbowl.vault.economy.Economy;
 import net.starly.auctionhouse.AuctionHouse;
 import net.starly.auctionhouse.entity.impl.AuctionItem;
+import net.starly.auctionhouse.page.AuctionHousePage;
 import net.starly.auctionhouse.page.AuctionHousePageHolder;
 import net.starly.auctionhouse.page.PaginationManager;
 import net.starly.auctionhouse.storage.AuctionItemStorage;
@@ -12,6 +14,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
@@ -59,16 +62,69 @@ public class AuctionHouseInventoryManager extends InventoryListenerBase {
             paginationManager.prevPage();
             pageInventory(player, paginationHolder);
             player.playSound(player.getLocation(), Sound.valueOf("ITEM_BOOK_PAGE_TURN"), 2, 1);
-        } else if (event.getSlot() == paginationHolder.getNextButtonSlot()) {
+        }
+
+        else if (event.getSlot() == paginationHolder.getNextButtonSlot()) {
             if (!paginationManager.hasNextPage()) return;
             paginationManager.nextPage();
             pageInventory(player, paginationHolder);
             player.playSound(player.getLocation(), Sound.valueOf("ITEM_BOOK_PAGE_TURN"), 2, 1);
-        } else if (event.getSlot() == paginationHolder.getWarehouseButtonSlot()) {
+        }
+
+        else if (event.getSlot() == paginationHolder.getWarehouseButtonSlot()) {
             WarehouseInventoryManager warehouseListenerManager = WarehouseInventoryManager.getInstance();
             warehouseListenerManager.openInventory(player);
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 2, 1);
         }
+
+        else {
+            Economy economy = AuctionHouse.getEconomy();
+            int clickedSlot = event.getSlot();
+
+            AuctionHousePage<AuctionItem> currentPage = paginationManager.getCurrentPageData();
+            AuctionItem clickedItem = currentPage.getItemStacks().get(clickedSlot);
+
+            if (clickedItem == null) return;
+
+            List<AuctionItem> itemsInDb = AuctionItemStorage.loadItems();
+            AuctionItem actualItem = itemsInDb.stream().filter(item ->
+                    item.sellerId().equals(clickedItem.sellerId())
+                            && item.price() == clickedItem.price()
+                            && item.expiryTime().isEqual(clickedItem.expiryTime())
+                            && areItemStacksEqual(item.itemStack(), clickedItem.itemStack())).findFirst().orElse(null);
+
+            if (actualItem == null) {
+                player.sendMessage("이 아이템은 더 이상 구매할 수 없습니다.");
+                return;
+            }
+
+            UUID buyerId  = player.getUniqueId();
+
+            if (actualItem != null && actualItem.sellerId().equals(buyerId)) {
+                event.getWhoClicked().sendMessage("자신의 아이템은 구매할 수 없습니다.");
+                return;
+            }
+
+            double playerBalance = economy.getBalance(player);
+            if (playerBalance < actualItem.price()) {
+                player.sendMessage("이 아이템을 구매하기에 돈이 충분하지 않습니다.");
+                return;
+            }
+
+            economy.withdrawPlayer(player, actualItem.price());
+            player.getInventory().addItem(actualItem.itemStack());
+
+            // Remove the item from the database
+            AuctionItemStorage.removeItem(actualItem);
+
+            openInventory(player);
+        }
+    }
+
+    private boolean areItemStacksEqual(ItemStack item1, ItemStack item2) {
+        if (item1 == null || item2 == null) return false;
+
+        return item1.getType().equals(item2.getType()) && item1.getAmount() == item2.getAmount();
     }
 
     @Override
