@@ -54,8 +54,8 @@ public class AuctionHouseExecutor implements TabExecutor {
                     return true;
                 }
 
-                LocalDateTime expirationTime = LocalDateTime.now().plus(7, ChronoUnit.HOURS);
-//                LocalDateTime expirationTime = LocalDateTime.now().plus(5, ChronoUnit.SECONDS);
+//                LocalDateTime expirationTime = LocalDateTime.now().plus(7, ChronoUnit.HOURS);
+                LocalDateTime expirationTime = LocalDateTime.now().plus(5, ChronoUnit.SECONDS);
 
 
                 AuctionItemStorage.storeItem(player.getUniqueId(), price, expirationTime, player.getInventory().getItemInMainHand().clone(), amount);

@@ -5,7 +5,7 @@ website: http://starly.kr/
 
 description: AuctionHouse Plugin.
 
-softdepend: [ ST-Core ]
+depend: [ ST-Core, Vault ]
 
 version: 1.0
 api-version: 1.19

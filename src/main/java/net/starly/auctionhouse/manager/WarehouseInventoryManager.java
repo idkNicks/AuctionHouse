@@ -1,9 +1,11 @@
 package net.starly.auctionhouse.manager;
 
 import net.starly.auctionhouse.entity.impl.WarehouseItem;
+import net.starly.auctionhouse.page.AuctionHousePageHolder;
 import net.starly.auctionhouse.page.PaginationManager;
 import net.starly.auctionhouse.page.WarehousePageHolder;
 import net.starly.auctionhouse.storage.PlayerItemStorage;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -31,6 +33,9 @@ public class WarehouseInventoryManager extends InventoryListenerBase {
         Inventory inventory = event.getClickedInventory();
 
         event.setCancelled(true);
+
+        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
+        if (!(inventory.getHolder() instanceof WarehousePageHolder<?>)) return;
 
         WarehousePageHolder warehousePageHolder = (WarehousePageHolder) inventory.getHolder();
         PaginationManager<WarehouseItem> paginationManager = warehousePageHolder.getPaginationManager();
