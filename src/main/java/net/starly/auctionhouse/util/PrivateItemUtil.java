@@ -9,6 +9,8 @@ import java.util.function.Consumer;
 
 public class PrivateItemUtil {
 
+    private PrivateItemUtil() {}
+
     public static void checkNbtTag(ItemStack itemStack, Consumer<Boolean> callback) {
         if (itemStack == null) {
             callback.accept(false);
