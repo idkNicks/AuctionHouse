@@ -97,4 +97,16 @@ public class AuctionItemStorage {
         } catch (IOException e) { e.printStackTrace(); }
         return items;
     }
+
+    public static int countItemsByPlayer(UUID sellerUuid) {
+        List<AuctionItem> items = loadItems();
+
+        int count = 0;
+        for (AuctionItem item : items) {
+            if (item.sellerId().equals(sellerUuid)) {
+                count++;
+            }
+        }
+        return count;
+    }
 }

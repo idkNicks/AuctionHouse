@@ -8,7 +8,6 @@ import net.starly.auctionhouse.listener.AuctionItemExpiryListener;
 import net.starly.auctionhouse.scheduler.AuctionItemExpiryScheduler;
 import net.starly.auctionhouse.storage.AuctionItemStorage;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -55,16 +54,7 @@ public class AuctionHouse extends JavaPlugin {
         }
 
         // LISTENER
-        registerListeners(
-                new AuctionItemExpiryListener()
-        );
-    }
-
-
-    private void registerListeners(Listener... listeners) {
-        for (Listener listener : listeners) {
-            getServer().getPluginManager().registerEvents(listener, this);
-        }
+        getServer().getPluginManager().registerEvents(new AuctionItemExpiryListener(), this);
     }
 
     private boolean isPluginEnable(String pluginName) {

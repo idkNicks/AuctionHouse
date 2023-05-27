@@ -110,6 +110,11 @@ public class AuctionHouseExecutor implements TabExecutor {
                 return true;
             }
 
+            if (AuctionItemStorage.countItemsByPlayer(player.getUniqueId()) >= content.getInt(MessageType.OTHER, "countItemsByPlayer")) {
+                content.getMessageAfterPrefix(MessageType.ERROR, "limitItem").ifPresent(player::sendMessage);
+                return false;
+            }
+
             if (itemStack.getAmount() < amount) {
                 content.getMessageAfterPrefix(MessageType.ERROR, "insufficientItem").ifPresent(sender::sendMessage);
                 player.playSound(player.getLocation(),
@@ -129,7 +134,7 @@ public class AuctionHouseExecutor implements TabExecutor {
                     return;
                 }
 
-                LocalDateTime expirationTime = LocalDateTime.now().plus(7, ChronoUnit.HOURS);
+                LocalDateTime expirationTime = LocalDateTime.now().plus(content.getInt(MessageType.OTHER, "expirationTime"), ChronoUnit.DAYS);
                 AuctionItemStorage.storeItem(player.getUniqueId(), price, expirationTime, player.getInventory().getItemInMainHand().clone(), amount);
                 itemStack.setAmount(itemStack.getAmount() - amount);
                 content.getMessageAfterPrefix(MessageType.NORMAL, "registerAuctionHouse").ifPresent(message -> {
