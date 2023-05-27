@@ -40,6 +40,7 @@ public class AuctionHouseExecutor implements TabExecutor {
             }
 
             AuctionHouse.getInstance().reloadConfig();
+            content.initialize(AuctionHouse.getInstance().getConfig());
             content.getMessageAfterPrefix(MessageType.NORMAL, "reloadComplete").ifPresent(sender::sendMessage);
             return true;
         }
