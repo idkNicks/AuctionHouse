@@ -67,4 +67,8 @@ public abstract class InventoryListenerBase {
     public void pageInventory(Player player, PaginationHolder paginationHolder) {
         openInventoryAndRegisterEvent(player, paginationHolder.getInventory());
     }
+
+    public boolean hasEmptyInventorySlot(Player player) {
+        return player.getInventory().firstEmpty() != -1;
+    }
 }

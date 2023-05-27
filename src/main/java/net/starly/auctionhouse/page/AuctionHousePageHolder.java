@@ -1,6 +1,8 @@
 package net.starly.auctionhouse.page;
 
 import lombok.Getter;
+import net.starly.auctionhouse.context.MessageContent;
+import net.starly.auctionhouse.context.MessageType;
 import net.starly.auctionhouse.entity.AuctionItemOrStack;
 import net.starly.auctionhouse.util.PaginationItemUtil;
 import org.bukkit.inventory.Inventory;
@@ -10,15 +12,16 @@ import org.jetbrains.annotations.NotNull;
 public class AuctionHousePageHolder<T extends AuctionItemOrStack> extends PaginationHolder<T> {
 
     private final int warehouseButtonSlot;
+    private MessageContent content = MessageContent.getInstance();
 
     public AuctionHousePageHolder(PaginationManager<T> paginationManager, int nextButtonSlot, int prevButtonSlot, int warehouseButtonSlot) {
-        super(paginationManager, nextButtonSlot, prevButtonSlot, "유저거래소");
+        super(paginationManager, nextButtonSlot, prevButtonSlot, MessageContent.getInstance().getMessage(MessageType.AUCTIONHOUSE, "inventory.title").orElse(""));
         this.warehouseButtonSlot = warehouseButtonSlot;
     }
 
     @Override
     public @NotNull Inventory getInventory() {
-        Inventory inventory = createInventory("[" + getCurrentPage() + "]");
+        Inventory inventory = createInventory("");
 
         AuctionHousePage<T> currentPage = paginationManager.getCurrentPageData();
 
@@ -27,8 +30,8 @@ public class AuctionHousePageHolder<T extends AuctionItemOrStack> extends Pagina
         }
 
         inventory.setItem(warehouseButtonSlot, PaginationItemUtil.createWarehouseItem());
-        inventory.setItem(50, PaginationItemUtil.createNextPageItem());
-        inventory.setItem(48, PaginationItemUtil.createPrevPageItem());
+        inventory.setItem(content.getInt(MessageType.AUCTIONHOUSE, "items.nextPage.slot"), PaginationItemUtil.createNextPageItem());
+        inventory.setItem(content.getInt(MessageType.AUCTIONHOUSE, "items.prevPage.slot"), PaginationItemUtil.createPrevPageItem());
 
         return inventory;
     }

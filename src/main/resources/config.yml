@@ -1,0 +1,199 @@
+# + -------------------------------------------------------------------------------- + #
+# | MESSAGE, ERRORMESSAGE SETTINGS ( 메시지 설정 )
+# | 유저에게 출력되지 않을 메세지는 해당 라인을 지우시거나
+# | 해당 라인의 제일 앞에 '#' 을 붙여 주석으로 처리하시면 됩니다.
+# + -------------------------------------------------------------------------------- + #
+messages:
+  # (메시지 앞에 붙는) 접두사
+  prefix: ' &6거래소 | &r'
+
+  # 콘피그를 리로드 하였을 때 출력되는 메시지
+  reloadComplete: '&a콘피그를 리로드하였습니다.'
+
+  # 거래소에 아이템을 등록하였을 때 출력되는 메시지
+  # {money} : 등록한 금액
+  registerAuctionHouse: '&a손에 든 아이템을 거래소에 {money}원으로 등록하였습니다.'
+
+  # 경매장에서 아이템을 구매하였을 때 출력되는 메시지
+  purchaseItem: '&a경매장에서 아이템을 구매하였습니다.'
+
+  # 유저가 아이템을 구매하였을 때 판매자가 온라인이라면 보내는 메시지
+  notificationPurchaseItem: '&a누군가 당신이 경매장에 올린 아이템을 구매하였습니다.'
+
+errorMessages:
+  # 권한이 없을 때 출력되는 메시지
+  notAnOperator: '&c해당 명령어를 실행할 권한이 없습니다.'
+
+  # 콘솔에서 사용이 불가능한 명령어를 사용하려고 하였을 때 출력되는 메시지
+  noConsoleCommand: '&c콘솔에서는 사용이 불가능한 명령어입니다.'
+
+  # 콘솔에서 불가능 명령어를 사용하였을 때 출력되는 메시지
+  noConsoleMessage: '&c콘솔에서는 불가능한 명령어입니다. (인게임에서 시도해주세요)'
+
+  # 잘못된 명령어를 사용하였을 때 출력되는 메시지
+  wrongCommand: '&c잘못된 명령어입니다. (다시 시도해주세요)'
+
+  # 숫자가 아닌 값을 입력하였을 때 출력되는 메시지
+  invalidNumber: '&c올바른 숫자로 입력해주세요.'
+
+  # 올바른 숫자를 입력하지 않았을 때 출력되는 메시지
+  negativeValue: '&c올바른 숫자의 값을 입력해주세요.'
+
+  # 손에 아이템을 들고 있지 않을 때 출력되는 메시지
+  noItemInHand: '&c손에 아이템을 들고 있어야 합니다.'
+
+  # 자신의 아이템을 구매하려고 하였을 때 출력되는 메시지
+  noPurchaseOwnItem: '&c자신의 아이템은 구매할 수 없습니다.'
+
+  # 돈이 충분하지 않을 때 출력되는 메시지
+  notEnoughMoney: '&c이 아이템을 구매하기에 돈이 충분하지 않습니다.'
+
+  # 아이템이 만료되었거나 누군가 구매하여 구매할 수 없을 때 출력되는 메시지
+  itemUnavailable: '&c이 아이템은 만료되었거나 누군가 구매하여 더이상 구매할 수 없습니다.'
+
+  # 귀속 아이템을 경매장 등록하려고 하였을 때 출력되는 메시지
+  noRegisterPrivateItem: '&c귀속아이템은 경매장에 등록할 수 없습니다.'
+
+  # 인벤토리에 충분한 공간이 없을 때 출력되는 메시지
+  hasEmptyInventorySlot: '&c인벤토리에 최소 한칸은 비워두고 구매를 시도해주세요.'
+
+  # 아이템 갯수가 부족했을 때 출력되는 메시지
+  insufficientItem: '&c아이템 갯수가 부족합니다.'
+
+  # 가격을 입력하지 않았을 때 출력되는 메시지
+  noPrice: '&c판매하실 가격을 입력해주세요.'
+
+  # 갯수를 입력하지 않았을 때 출력되는 메시지
+  noAmount: '&c판매하실 아이템 갯수를 입력해주세요.'
+
+# + -------------------------------------------------------------------------------- + #
+# | AuctionHouse SETTINGS ( 경매장 인벤토리 설정 )
+# + -------------------------------------------------------------------------------- + #
+auctionHouse:
+  # 경매장 인벤토리
+  inventory:
+    # 타이틀
+    title: '유저 경매장'
+    # 아이템 로어
+    # {seller} : 판매자 닉네임
+    # {price} : 아이템 가격
+    # {expiry} : 만료 시간
+    # {material} : 아이템 종류
+    lore: '
+      &6&l판매자 | &f{seller} \n
+      &6&l가격 | &f {price} \n
+      &6&l만료 시간 | &f{expiry}'
+
+  # 아이템 종류 / 이름 / 슬롯 / 로어
+  items:
+    # 다음 페이지
+    nextPage:
+      # 아이템 종류 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)
+      material: ARROW
+      # 아이템 슬롯
+      slot: 50
+      # 아이템 이름
+      displayname: '&6[ &f다음 페이지 &6]'
+      # 아이템 로어
+      lore: '\n&6＞ &f클릭 시 다음 페이지로 이동합니다. '
+
+    # 이전 페이지
+    prevPage:
+      # 아이템 종류 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)
+      material: ARROW
+      # 아이템 슬롯
+      slot: 48
+      displayname: '&6[ &f이전 페이지 &6]'
+      lore: '\n&6＞ &f클릭 시 이전 페이지로 이동합니다. '
+
+    # 만료 보관소
+    warehouse:
+      # 아이템 종류 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)
+      material: CHEST
+      # 아이템 슬롯
+      slot: 45
+      # 아이템 이름
+      displayname: '&6[ &f만료보관소 &6]'
+      lore: '\n&6＞ &f클릭 시 만료보관소로 이동합니다. '
+
+      # 사운드 설정
+      sound:
+        # 사운드 이름 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html)
+        name: BLOCK_NOTE_BLOCK_BELL
+        # 사운드 볼륨
+        volume: 2.0
+        # 사운드 높낮이
+        pitch: 1.0
+
+
+# + -------------------------------------------------------------------------------- + #
+# | Warehouse SETTINGS ( 만료보관소 인벤토리 설정 )
+# + -------------------------------------------------------------------------------- + #
+warehouse:
+  # 경매장 인벤토리
+  inventory:
+    # 타이틀
+    title: '만료보관소'
+
+  # 아이템 종류 / 이름 / 커스텀 모델 데이터 / 슬롯 / 로어 / 사운드 설정
+  items:
+    # 다음 페이지
+    nextPage:
+      # 아이템 종류 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)
+      material: ARROW
+      # 아이템 슬롯
+      slot: 50
+      # 아이템 이름
+      displayname: '&6[ &f다음 페이지 &6]'
+      lore: '\n&6＞ &f클릭 시 다음 페이지로 이동합니다. '
+
+      # 사운드 설정
+      sound:
+        # 사운드 이름 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html)
+        name: ITEM_BOOK_PAGE_TURN
+        # 사운드 볼륨
+        volume: 2.0
+        # 사운드 높낮이
+        pitch: 1.0
+
+    # 이전 페이지
+    prevPage:
+      # 아이템 종류 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)
+      material: ARROW
+      # 아이템 슬롯
+      slot: 48
+      # 아이템 이름
+      displayname: '&6[ &f이전 페이지 &6]'
+      lore: '\n&6＞ &f클릭 시 이전 페이지로 이동합니다. '
+
+      # 사운드 설정
+      sound:
+        # 사운드 이름 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html)
+        name: ITEM_BOOK_PAGE_TURN
+        # 사운드 볼륨
+        volume: 2.0
+        # 사운드 높낮이
+        pitch: 1.0
+
+
+# + -------------------------------------------------------------------------------- + #
+# | OTHER SETTINGS ( 기타 설정 )
+# + -------------------------------------------------------------------------------- + #
+other:
+  # 완료 사운드
+  completeSound:
+    # 사운드 이름 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html)
+    name: ENTITY_PLAYER_LEVELUP
+    # 사운드 볼륨
+    volume: 0.5
+    # 사운드 높낮이
+    pitch: 3
+
+  # 오류 사운드
+  errorSound:
+    # 사운드 이름 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html)
+    name: BLOCK_ANVIL_PLACE
+    # 사운드 볼륨
+    volume: 0.5
+    # 사운드 높낮이
+    pitch: 1.4

@@ -1,9 +1,13 @@
 package net.starly.auctionhouse.command;
 
 import net.starly.auctionhouse.AuctionHouse;
+import net.starly.auctionhouse.context.MessageContent;
+import net.starly.auctionhouse.context.MessageType;
 import net.starly.auctionhouse.manager.AuctionHouseInventoryManager;
 import net.starly.auctionhouse.storage.AuctionItemStorage;
+import net.starly.auctionhouse.util.PrivateItemUtil;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -13,6 +17,7 @@ import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -26,6 +31,24 @@ public class AuctionHouseExecutor implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
+        MessageContent content = MessageContent.getInstance();
+
+        if (args.length > 0 && ("리로드".equalsIgnoreCase(args[0]) || "reload".equalsIgnoreCase(args[0]))) {
+            if (!sender.isOp()) {
+                content.getMessageAfterPrefix(MessageType.ERROR, "notAnOperator").ifPresent(sender::sendMessage);
+                return false;
+            }
+
+            AuctionHouse.getInstance().reloadConfig();
+            content.getMessageAfterPrefix(MessageType.NORMAL, "reloadComplete").ifPresent(sender::sendMessage);
+            return true;
+        }
+
+        if (!(sender instanceof Player)) {
+            content.getMessageAfterPrefix(MessageType.ERROR, "noConsoleCommand").ifPresent(sender::sendMessage);
+            return true;
+        }
+
         Player player = (Player) sender;
 
         if (args.length == 0) {
@@ -34,41 +57,91 @@ public class AuctionHouseExecutor implements TabExecutor {
             return true;
         }
 
-        switch (args[0]) {
+        if ("판매".equalsIgnoreCase(args[0]) || "sell".equalsIgnoreCase(args[0])) {
 
-            case "판매", "sell" -> {
-                long price;
+            if (args.length == 1) {
+                content.getMessageAfterPrefix(MessageType.ERROR, "noPrice").ifPresent(player::sendMessage);
+                return false;
+            }
 
-                try {
-                    price = Long.parseLong(args[1]);
-                } catch (NumberFormatException exception) {
-                    player.sendMessage("숫자만 입력해야 합니다.");
+            if (args.length == 2) {
+                content.getMessageAfterPrefix(MessageType.ERROR, "noAmount").ifPresent(player::sendMessage);
+                return false;
+            }
+
+            if (args.length != 3) {
+                content.getMessageAfterPrefix(MessageType.ERROR, "wrongCommand").ifPresent(player::sendMessage);
+                return false;
+            }
+
+            int amount;
+            long price;
+
+            try {
+                amount = Integer.parseInt(args[2]);
+                price = Long.parseLong(args[1]);
+
+                if (amount <= 0 || price <= 0) {
+                    content.getMessageAfterPrefix(MessageType.ERROR, "negativeValue").ifPresent(sender::sendMessage);
+                    player.playSound(player.getLocation(),
+                            Sound.valueOf(content.getMessage(MessageType.OTHER, "errorSound.name").orElse("BLOCK_ANVIL_PLACE")),
+                            content.getFloat(MessageType.OTHER, "errorSound.volume"),
+                            content.getFloat(MessageType.OTHER, "errorSound.pitch"));
                     return true;
                 }
+            } catch (NumberFormatException exception) {
+                content.getMessageAfterPrefix(MessageType.ERROR, "invalidNumber").ifPresent(sender::sendMessage);
+                player.playSound(player.getLocation(),
+                        Sound.valueOf(content.getMessage(MessageType.OTHER, "errorSound.name").orElse("BLOCK_ANVIL_PLACE")),
+                        content.getFloat(MessageType.OTHER, "errorSound.volume"),
+                        content.getFloat(MessageType.OTHER, "errorSound.pitch"));
+                return true;
+            }
 
-                int amount = Integer.parseInt(args[2]);
+            ItemStack itemStack = player.getInventory().getItemInMainHand();
 
-                ItemStack itemStack = player.getInventory().getItemInMainHand();
-                if (itemStack.getType() == Material.AIR) {
-                    player.sendMessage("물건을 들고 있어야 합니다.");
-                    return true;
+            if (itemStack.getType() == Material.AIR) {
+                content.getMessageAfterPrefix(MessageType.ERROR, "noItemInHand").ifPresent(sender::sendMessage);
+                player.playSound(player.getLocation(),
+                        Sound.valueOf(content.getMessage(MessageType.OTHER, "errorSound.name").orElse("BLOCK_ANVIL_PLACE")),
+                        content.getFloat(MessageType.OTHER, "errorSound.volume"),
+                        content.getFloat(MessageType.OTHER, "errorSound.pitch"));
+                return true;
+            }
+
+            if (itemStack.getAmount() < amount) {
+                content.getMessageAfterPrefix(MessageType.ERROR, "insufficientItem").ifPresent(sender::sendMessage);
+                player.playSound(player.getLocation(),
+                        Sound.valueOf(content.getMessage(MessageType.OTHER, "errorSound.name").orElse("BLOCK_ANVIL_PLACE")),
+                        content.getFloat(MessageType.OTHER, "errorSound.volume"),
+                        content.getFloat(MessageType.OTHER, "errorSound.pitch"));
+                return true;
+            }
+
+            PrivateItemUtil.checkNbtTag(itemStack.clone(), (isBound) -> {
+                if (isBound) {
+                    content.getMessageAfterPrefix(MessageType.ERROR, "noRegisterPrivateItem").ifPresent(player::sendMessage);
+                    player.playSound(player.getLocation(),
+                            Sound.valueOf(content.getMessage(MessageType.OTHER, "errorSound.name").orElse("BLOCK_ANVIL_PLACE")),
+                            content.getFloat(MessageType.OTHER, "errorSound.volume"),
+                            content.getFloat(MessageType.OTHER, "errorSound.pitch"));
+                    return;
                 }
 
                 LocalDateTime expirationTime = LocalDateTime.now().plus(7, ChronoUnit.HOURS);
-//                LocalDateTime expirationTime = LocalDateTime.now().plus(5, ChronoUnit.SECONDS);
-
-
                 AuctionItemStorage.storeItem(player.getUniqueId(), price, expirationTime, player.getInventory().getItemInMainHand().clone(), amount);
                 itemStack.setAmount(itemStack.getAmount() - amount);
-                player.sendMessage("경매 아이템이 등록되었습니다.");
-                return true;
-            }
+                content.getMessageAfterPrefix(MessageType.NORMAL, "registerAuctionHouse").ifPresent(message -> {
+                    String replacedMessage = message.replace("{money}", new DecimalFormat("#,##0").format(price));
+                    player.sendMessage(replacedMessage);
+                });
 
-            case "리로드", "reload" -> {
-                AuctionHouse.getInstance().reloadConfig();
-                player.sendMessage("콘피그를 리로드 하였습니다.");
-                return true;
-            }
+                player.playSound(player.getLocation(),
+                        Sound.valueOf(content.getMessage(MessageType.OTHER, "completeSound.name").orElse("ENTITY_PLAYER_LEVELUP")),
+                        content.getFloat(MessageType.OTHER, "completeSound.volume"),
+                        content.getFloat(MessageType.OTHER, "completeSound.pitch"));
+            });
+            return true;
         }
         return false;
     }
@@ -99,7 +172,6 @@ public class AuctionHouseExecutor implements TabExecutor {
                     .collect(Collectors.toList());
             return StringUtil.copyPartialMatches(args[2], numberList, new ArrayList<>());
         }
-
         return Collections.emptyList();
     }
 }

@@ -2,6 +2,7 @@ package net.starly.auctionhouse.storage;
 
 import net.starly.auctionhouse.AuctionHouse;
 import net.starly.auctionhouse.entity.impl.AuctionItem;
+import net.starly.auctionhouse.entity.impl.WarehouseItem;
 import net.starly.auctionhouse.util.ItemSerializationUtil;
 import org.bukkit.inventory.ItemStack;
 
@@ -40,13 +41,24 @@ public class AuctionItemStorage {
 
     public static void removeItem(AuctionItem targetItem) {
         List<AuctionItem> items = loadItems();
-        items.removeIf(item -> item.sellerId().equals(targetItem.sellerId())
-                && item.price() == targetItem.price()
-                && item.expiryTime().isEqual(targetItem.expiryTime())
-                && item.itemStack().equals(targetItem.itemStack()));
+
+        boolean itemRemoved = false;
+
+        List<AuctionItem> updatedItems = new ArrayList<>();
+        for (AuctionItem item : items) {
+            if (!itemRemoved
+                    && item.sellerId().equals(targetItem.sellerId())
+                    && item.price() == targetItem.price()
+                    && item.expiryTime().isEqual(targetItem.expiryTime())
+                    && item.itemStack().equals(targetItem.itemStack())) {
+                itemRemoved = true;
+            } else {
+                updatedItems.add(item);
+            }
+        }
 
         try (BufferedWriter writer = Files.newBufferedWriter(FILE.toPath(), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING)) {
-            for (AuctionItem item : items) {
+            for (AuctionItem item : updatedItems) {
                 String serializedItemStack = ItemSerializationUtil.serializeItemStack(item.itemStack());
                 String line = item.sellerId() + "," + item.price() + "," + item.expiryTime().format(DATE_FORMATTER) + "," + serializedItemStack;
                 writer.write(line);

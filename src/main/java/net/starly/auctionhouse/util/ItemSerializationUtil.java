@@ -11,6 +11,8 @@ import java.util.Base64;
 
 public class ItemSerializationUtil {
 
+    private ItemSerializationUtil() {}
+
     public static String serializeItemStack(ItemStack itemStack) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
              BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream)) {

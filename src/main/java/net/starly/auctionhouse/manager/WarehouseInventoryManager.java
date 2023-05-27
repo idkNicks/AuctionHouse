@@ -1,6 +1,8 @@
 package net.starly.auctionhouse.manager;
 
 import net.starly.auctionhouse.AuctionHouse;
+import net.starly.auctionhouse.context.MessageContent;
+import net.starly.auctionhouse.context.MessageType;
 import net.starly.auctionhouse.entity.impl.WarehouseItem;
 import net.starly.auctionhouse.page.AuctionHousePageHolder;
 import net.starly.auctionhouse.page.PaginationManager;
@@ -20,6 +22,7 @@ import java.util.List;
 public class WarehouseInventoryManager extends InventoryListenerBase {
 
     private static WarehouseInventoryManager instance;
+    private MessageContent content = MessageContent.getInstance();
 
     private WarehouseInventoryManager() {}
 
@@ -43,18 +46,22 @@ public class WarehouseInventoryManager extends InventoryListenerBase {
 
         if (event.getSlot() == warehousePageHolder.getPrevButtonSlot()) {
             if (!paginationManager.hasPrevPage()) return;
-            player.sendMessage("이전페이지");
             paginationManager.prevPage();
             pageInventory(player, warehousePageHolder);
-            player.playSound(player.getLocation(), Sound.valueOf("ITEM_BOOK_PAGE_TURN"), 2, 1);
+            player.playSound(player.getLocation(),
+                    Sound.valueOf(content.getMessage(MessageType.WAREHOUSE, "items.prevPage.sound.name").orElse("ITEM_BOOK_PAGE_TURN")),
+                    content.getFloat(MessageType.WAREHOUSE, "items.prevPage.sound.volume"),
+                    content.getFloat(MessageType.WAREHOUSE, "items.prevPage.sound.pitch"));
         }
 
         else if (event.getSlot() == warehousePageHolder.getNextButtonSlot()) {
             if (!paginationManager.hasNextPage()) return;
-            player.sendMessage("다음페이지");
             paginationManager.nextPage();
             pageInventory(player, warehousePageHolder);
-            player.playSound(player.getLocation(), Sound.valueOf("ITEM_BOOK_PAGE_TURN"), 2, 1);
+            player.playSound(player.getLocation(),
+                    Sound.valueOf(content.getMessage(MessageType.WAREHOUSE, "items.nextPage.sound.name").orElse("ITEM_BOOK_PAGE_TURN")),
+                    content.getFloat(MessageType.WAREHOUSE, "items.nextPage.sound.volume"),
+                    content.getFloat(MessageType.WAREHOUSE, "items.nextPage.sound.pitch"));
         }
 
         else {
@@ -76,7 +83,6 @@ public class WarehouseInventoryManager extends InventoryListenerBase {
                 paginationManager.getCurrentPageData().setItemStacks(items);
 
                 if (items.isEmpty() && paginationManager.hasPrevPage()) {
-                    player.sendMessage("이전페이지");
                     paginationManager.prevPage();
                 }
                 shouldOpenNewInventory = false;

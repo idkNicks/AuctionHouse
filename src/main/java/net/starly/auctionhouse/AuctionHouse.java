@@ -3,6 +3,7 @@ package net.starly.auctionhouse;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import net.starly.auctionhouse.command.AuctionHouseExecutor;
+import net.starly.auctionhouse.context.MessageContent;
 import net.starly.auctionhouse.listener.AuctionItemExpiryListener;
 import net.starly.auctionhouse.scheduler.AuctionItemExpiryScheduler;
 import net.starly.auctionhouse.storage.AuctionItemStorage;
@@ -36,11 +37,15 @@ public class AuctionHouse extends JavaPlugin {
             return;
         }
 
+        // CONFIG
         saveDefaultConfig();
+        MessageContent.getInstance().initialize(getConfig());
 
+        // SCHEDULER
         AuctionItemStorage auctionItemStorage = new AuctionItemStorage();
         new AuctionItemExpiryScheduler(auctionItemStorage).runTaskTimer(this, 0L, 20L);
 
+        // COMMAND
         AuctionHouseExecutor auctionHouseExecutor = new AuctionHouseExecutor();
         PluginCommand auctionHouse = getServer().getPluginCommand("거래소");
 
@@ -49,6 +54,7 @@ public class AuctionHouse extends JavaPlugin {
             auctionHouse.setTabCompleter(auctionHouseExecutor);
         }
 
+        // LISTENER
         registerListeners(
                 new AuctionItemExpiryListener()
         );
