@@ -2,7 +2,6 @@ package net.starly.auctionhouse.storage;
 
 import net.starly.auctionhouse.AuctionHouse;
 import net.starly.auctionhouse.entity.impl.AuctionItem;
-import net.starly.auctionhouse.entity.impl.WarehouseItem;
 import net.starly.auctionhouse.util.ItemSerializationUtil;
 import org.bukkit.inventory.ItemStack;
 
@@ -67,7 +66,6 @@ public class AuctionItemStorage {
         } catch (IOException e) { e.printStackTrace(); }
     }
 
-
     public static List<AuctionItem> loadItems() {
         List<AuctionItem> items = new ArrayList<>();
 
@@ -108,5 +106,17 @@ public class AuctionItemStorage {
             }
         }
         return count;
+    }
+
+    public static List<AuctionItem> getItemsByPlayer(UUID sellerUuid) {
+        List<AuctionItem> items = loadItems();
+
+        List<AuctionItem> playerItems = new ArrayList<>();
+        for (AuctionItem item : items) {
+            if (item.sellerId().equals(sellerUuid)) {
+                playerItems.add(item);
+            }
+        }
+        return playerItems;
     }
 }

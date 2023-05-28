@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@SuppressWarnings("all")
+
 public abstract class InventoryListenerBase {
 
     protected static final Map<UUID, Listener> listenerMap = new HashMap<>();

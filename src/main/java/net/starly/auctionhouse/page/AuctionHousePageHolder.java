@@ -11,11 +11,13 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public class AuctionHousePageHolder<T extends AuctionItemOrStack> extends PaginationHolder<T> {
 
+    private final int expiryButtonSlot;
     private final int warehouseButtonSlot;
     private MessageContent content = MessageContent.getInstance();
 
-    public AuctionHousePageHolder(PaginationManager<T> paginationManager, int nextButtonSlot, int prevButtonSlot, int warehouseButtonSlot) {
+    public AuctionHousePageHolder(PaginationManager<T> paginationManager, int nextButtonSlot, int prevButtonSlot, int expiryButtonSlot, int warehouseButtonSlot) {
         super(paginationManager, nextButtonSlot, prevButtonSlot, MessageContent.getInstance().getMessage(MessageType.AUCTIONHOUSE, "inventory.title").orElse(""));
+        this.expiryButtonSlot = expiryButtonSlot;
         this.warehouseButtonSlot = warehouseButtonSlot;
     }
 
@@ -29,6 +31,7 @@ public class AuctionHousePageHolder<T extends AuctionItemOrStack> extends Pagina
             inventory.setItem(i, currentPage.getItemStacks().get(i).getItemStack());
         }
 
+        inventory.setItem(expiryButtonSlot, PaginationItemUtil.createExpiryItem());
         inventory.setItem(warehouseButtonSlot, PaginationItemUtil.createWarehouseItem());
         inventory.setItem(content.getInt(MessageType.AUCTIONHOUSE, "items.nextPage.slot"), PaginationItemUtil.createNextPageItem());
         inventory.setItem(content.getInt(MessageType.AUCTIONHOUSE, "items.prevPage.slot"), PaginationItemUtil.createPrevPageItem());

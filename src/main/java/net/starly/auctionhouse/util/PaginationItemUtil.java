@@ -27,6 +27,13 @@ public class PaginationItemUtil {
                 .build();
     }
 
+    public static @NotNull ItemStack createExpiryItem() {
+        return new ItemBuilder(Material.valueOf(content.getMessage(MessageType.AUCTIONHOUSE, "items.expiry.material").orElse("CHEST")))
+                .setName(content.getMessage(MessageType.AUCTIONHOUSE, "items.expiry.displayname").orElse(""))
+                .setLore(content.getMessages(MessageType.AUCTIONHOUSE, "items.expiry.lore"))
+                .build();
+    }
+
     public static @NotNull ItemStack createWarehouseItem() {
         return new ItemBuilder(Material.valueOf(content.getMessage(MessageType.AUCTIONHOUSE, "items.warehouse.material").orElse("CHEST")))
                 .setName(content.getMessage(MessageType.AUCTIONHOUSE, "items.warehouse.displayname").orElse(""))

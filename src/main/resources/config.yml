@@ -20,6 +20,12 @@ messages:
   # 유저가 아이템을 구매하였을 때 판매자가 온라인이라면 보내는 메시지
   notificationPurchaseItem: '&a누군가 당신이 경매장에 올린 아이템을 구매하였습니다.'
 
+  # 경매장에 아이템을 내렸을 때 출력되는 메시지
+  removeAuctionhouseItem: '&a해당 아이템을 성공적으로 경매장에서 내렸습니다.'
+
+  # 만료 보관소에서 아이템을 지급 받았을 때 출력되는 메시지
+  getExpiryItem: '&a만료 보관에서 아이템을 지급 받았습니다.'
+
 errorMessages:
   # 권한이 없을 때 출력되는 메시지
   notAnOperator: '&c해당 명령어를 실행할 권한이 없습니다.'
@@ -107,17 +113,39 @@ auctionHouse:
       # 아이템 슬롯
       slot: 48
       displayname: '&6[ &f이전 페이지 &6]'
+      # 아이템 설명
       lore: '\n&6＞ &f클릭 시 이전 페이지로 이동합니다. '
 
     # 만료 보관소
-    warehouse:
+    expiry:
       # 아이템 종류 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)
-      material: CHEST
+      material: ENDER_CHEST
       # 아이템 슬롯
       slot: 45
       # 아이템 이름
       displayname: '&6[ &f만료보관소 &6]'
+      # 아이템 설명
       lore: '\n&6＞ &f클릭 시 만료보관소로 이동합니다. '
+
+      # 사운드 설정
+      sound:
+        # 사운드 이름 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html)
+        name: BLOCK_NOTE_BLOCK_BELL
+        # 사운드 볼륨
+        volume: 2.0
+        # 사운드 높낮이
+        pitch: 1.0
+
+    # 아이템 목록
+    warehouse:
+      # 아이템 종류 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)
+      material: CHEST
+      # 아이템 슬롯
+      slot: 53
+      # 아이템 이름
+      displayname: '&6[ &f아이템 목록 &6]'
+      # 아이템 설명
+      lore: '\n&6＞ &f클릭 시 아이템 목록으로 이동합니다. '
 
       # 사운드 설정
       sound:
@@ -130,9 +158,9 @@ auctionHouse:
 
 
 # + -------------------------------------------------------------------------------- + #
-# | Warehouse SETTINGS ( 만료보관소 인벤토리 설정 )
+# | Expiry SETTINGS ( 만료보관소 인벤토리 설정 )
 # + -------------------------------------------------------------------------------- + #
-warehouse:
+expiry:
   # 경매장 인벤토리
   inventory:
     # 타이틀
@@ -148,6 +176,7 @@ warehouse:
       slot: 50
       # 아이템 이름
       displayname: '&6[ &f다음 페이지 &6]'
+      # 아이템 설명
       lore: '\n&6＞ &f클릭 시 다음 페이지로 이동합니다. '
 
       # 사운드 설정
@@ -167,6 +196,7 @@ warehouse:
       slot: 48
       # 아이템 이름
       displayname: '&6[ &f이전 페이지 &6]'
+      # 아이템 설명
       lore: '\n&6＞ &f클릭 시 이전 페이지로 이동합니다. '
 
       # 사운드 설정
@@ -178,6 +208,86 @@ warehouse:
         # 사운드 높낮이
         pitch: 1.0
 
+
+# + -------------------------------------------------------------------------------- + #
+# | Warehouse SETTINGS ( 아이템목록 인벤토리 설정 )
+# + -------------------------------------------------------------------------------- + #
+warehouse:
+  # 경매장 인벤토리
+  inventory:
+    # 타이틀
+    title: '아이템목록'
+
+  # 아이템 종류 / 이름 / 커스텀 모델 데이터 / 슬롯 / 로어 / 사운드 설정
+  items:
+    # 다음 페이지
+    nextPage:
+      # 아이템 종류 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)
+      material: ARROW
+      # 아이템 슬롯
+      slot: 50
+      # 아이템 이름
+      displayname: '&6[ &f다음 페이지 &6]'
+      # 아이템 설명
+      lore: '\n&6＞ &f클릭 시 다음 페이지로 이동합니다. '
+
+      # 사운드 설정
+      sound:
+        # 사운드 이름 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html)
+        name: ITEM_BOOK_PAGE_TURN
+        # 사운드 볼륨
+        volume: 2.0
+        # 사운드 높낮이
+        pitch: 1.0
+
+    # 이전 페이지
+    prevPage:
+      # 아이템 종류 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)
+      material: ARROW
+      # 아이템 슬롯
+      slot: 48
+      # 아이템 이름
+      displayname: '&6[ &f이전 페이지 &6]'
+      # 아이템 설명
+      lore: '\n&6＞ &f클릭 시 이전 페이지로 이동합니다. '
+
+      # 사운드 설정
+      sound:
+        # 사운드 이름 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html)
+        name: ITEM_BOOK_PAGE_TURN
+        # 사운드 볼륨
+        volume: 2.0
+        # 사운드 높낮이
+        pitch: 1.0
+
+# + -------------------------------------------------------------------------------- + #
+# | Confirm Item SETTINGS ( 구매 확인 인벤토리 설정 )
+# + -------------------------------------------------------------------------------- + #
+confirmInventory:
+  # 제목
+  title: '정말로 구매하시겠습니까?'
+
+  # 확인
+  confirm:
+    # 아이템 종류 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)
+    material: GREEN_STAINED_GLASS_PANE
+    # 아이템 슬롯
+    slot: 12
+    # 아이템 설명
+    displayname: '&6[ &f확인 &6]'
+    # 로어
+    lore: '\n&6＞ &f클릭 시 아이템을 구매합니다. '
+
+  # 취소
+  deny:
+    # 아이템 종류 (https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)
+    material: RED_STAINED_GLASS_PANE
+    # 아이템 슬롯
+    slot: 14
+    # 아이템 설명
+    displayname: '&c[ &f취소 &c]'
+    # 로어
+    lore: '\n&6＞ &f클릭 시 구매를 취소합니다. '
 
 # + -------------------------------------------------------------------------------- + #
 # | OTHER SETTINGS ( 기타 설정 )

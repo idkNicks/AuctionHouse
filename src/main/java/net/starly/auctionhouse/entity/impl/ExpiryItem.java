@@ -1,10 +1,9 @@
 package net.starly.auctionhouse.entity.impl;
 
-import lombok.Getter;
 import net.starly.auctionhouse.entity.AuctionItemOrStack;
 import org.bukkit.inventory.ItemStack;
 
-public record WarehouseItem(ItemStack itemStack) implements AuctionItemOrStack {
+public record ExpiryItem(ItemStack itemStack) implements AuctionItemOrStack {
 
     @Override
     public ItemStack getItemStack() {

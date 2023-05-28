@@ -10,7 +10,9 @@ public enum MessageType {
     ERROR("errorMessages"),
     NORMAL("messages"),
     AUCTIONHOUSE("auctionHouse"),
+    EXPIRY("expiry"),
     WAREHOUSE("warehouse"),
+    CONFIRMGUI("confirmInventory"),
     OTHER("other");
 
     public final String key;

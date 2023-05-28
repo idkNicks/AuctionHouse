@@ -2,7 +2,8 @@ package net.starly.auctionhouse.storage;
 
 import lombok.Getter;
 import net.starly.auctionhouse.AuctionHouse;
-import net.starly.auctionhouse.entity.impl.WarehouseItem;
+import net.starly.auctionhouse.entity.impl.AuctionItem;
+import net.starly.auctionhouse.entity.impl.ExpiryItem;
 import net.starly.auctionhouse.util.ItemSerializationUtil;
 import org.bukkit.inventory.ItemStack;
 
@@ -19,7 +20,7 @@ public class PlayerItemStorage {
 
     @Getter private static final File PLAYER_ITEMS_FILE = new File(AuctionHouse.getInstance().getDataFolder(), "playeritems.db");
 
-    public static void storeItem(UUID playerId, WarehouseItem item) {
+    public static void storeItem(UUID playerId, ExpiryItem item) {
         String serializedItemStack = ItemSerializationUtil.serializeItemStack(item.itemStack());
         String line = playerId + "," + serializedItemStack;
 
@@ -35,7 +36,7 @@ public class PlayerItemStorage {
         } catch (IOException e) { e.printStackTrace(); }
     }
 
-    public static void removeItem(UUID playerId, WarehouseItem item) {
+    public static void removeItem(UUID playerId, ExpiryItem item) {
         try {
             String itemString = ItemSerializationUtil.serializeItemStack(item.itemStack());
             List<String> lines = Files.readAllLines(PLAYER_ITEMS_FILE.toPath(), StandardCharsets.UTF_8);
@@ -56,8 +57,8 @@ public class PlayerItemStorage {
         } catch (IOException e) { e.printStackTrace(); }
     }
 
-    public static List<WarehouseItem> loadExpiredItem(UUID playerId) {
-        List<WarehouseItem> items = new ArrayList<>();
+    public static List<ExpiryItem> loadExpiredItem(UUID playerId) {
+        List<ExpiryItem> items = new ArrayList<>();
 
         if (!PLAYER_ITEMS_FILE.exists()) {
             try {
@@ -83,7 +84,7 @@ public class PlayerItemStorage {
                     if (savedPlayerId.equals(playerId)) {
                         try {
                             ItemStack itemStack = ItemSerializationUtil.deserializeItemStack(parts[1]);
-                            items.add(new WarehouseItem(itemStack));
+                            items.add(new ExpiryItem(itemStack));
                         } catch (Exception ex) { ex.printStackTrace(); }
                     }
                 }
