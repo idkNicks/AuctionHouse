@@ -69,8 +69,8 @@ public class AuctionHouseInventoryManager extends InventoryListenerBase {
             }
 
             if (event.getSlot() == content.getInt(MessageType.AUCTIONHOUSE, "items.warehouse.slot")) {
-                WarehousePageHolder paginationHolder = (WarehousePageHolder) inventory.getHolder();
-                player.openInventory(paginationHolder.getInventory());
+                WarehouseManager warehouseManager = WarehouseManager.getInstance();
+                warehouseManager.openInventory(player);
                 player.playSound(player.getLocation(),
                         Sound.valueOf(content.getMessage(MessageType.AUCTIONHOUSE, "items.warehouse.sound.name").orElse("ITEM_BOOK_PAGE_TURN")),
                         content.getFloat(MessageType.AUCTIONHOUSE, "items.warehouse.sound.volume"),
